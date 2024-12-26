@@ -229,10 +229,7 @@ geometry_msgs::msg::TwistStamped OmniPidPursuitController::computeVelocityComman
     cmd_vel.twist.linear.y = lin_vel * sin(theta_dist);
     cmd_vel.twist.angular.z = angular_vel;
   } else {
-    RCLCPP_WARN(logger_, "Collision detected in the trajectory. Stopping the robot.");
-    cmd_vel.twist.linear.x = 0.0;
-    cmd_vel.twist.linear.y = 0.0;
-    cmd_vel.twist.angular.z = 0.0;
+    throw nav2_core::PlannerException("Collision detected in the trajectory. Stopping the robot!");
   }
 
   return cmd_vel;
