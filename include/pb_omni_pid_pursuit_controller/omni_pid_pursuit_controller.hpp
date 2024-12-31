@@ -1,8 +1,23 @@
-// Copyright (c) 2024 Lihan Chen
-// Licensed under the MIT License.
+// Copyright 2024 Lihan Chen
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 #ifndef PB_OMNI_PID_PURSUIT_CONTROLLER__OMNI_PID_PURSUIT_CONTROLLER_HPP_
 #define PB_OMNI_PID_PURSUIT_CONTROLLER__OMNI_PID_PURSUIT_CONTROLLER_HPP_
+
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "nav2_core/controller.hpp"
 #include "pb_omni_pid_pursuit_controller/pid.hpp"
@@ -18,12 +33,14 @@ class OmniPidPursuitController : public nav2_core::Controller
 {
 public:
   /**
-   * @brief Constructor for pb_omni_pid_pursuit_controller::OmniPidPursuitController
+   * @brief Constructor for
+   * pb_omni_pid_pursuit_controller::OmniPidPursuitController
    */
   OmniPidPursuitController() = default;
 
   /**
-   * @brief Destrructor for pb_omni_pid_pursuit_controller::OmniPidPursuitController
+   * @brief Destrructor for
+   * pb_omni_pid_pursuit_controller::OmniPidPursuitController
    */
   ~OmniPidPursuitController() override = default;
 
@@ -55,7 +72,8 @@ public:
   void deactivate() override;
 
   /**
-   * @brief Compute the best command given the current pose and velocity, with possible debug information
+   * @brief Compute the best command given the current pose and velocity, with
+   * possible debug information
    *
    * Same as above computeVelocityCommands, but with debug results.
    * If the results pointer is not null, additional information about the twists
@@ -63,7 +81,8 @@ public:
    *
    * @param pose      Current robot pose
    * @param velocity  Current robot velocity
-   * @param goal_checker   Ptr to the goal checker for this task in case useful in computing commands
+   * @param goal_checker   Ptr to the goal checker for this task in case useful
+   * in computing commands
    * @return          Best command
    */
   geometry_msgs::msg::TwistStamped computeVelocityCommands(
@@ -87,8 +106,9 @@ public:
 
 protected:
   /**
-   * @brief Transforms global plan into same frame as pose and clips poses ineligible for lookaheadPoint
-   * Points ineligible to be selected as a lookahead point if they are any of the following:
+   * @brief Transforms global plan into same frame as pose and clips poses
+   * ineligible for lookaheadPoint Points ineligible to be selected as a
+   * lookahead point if they are any of the following:
    * - Outside the local_costmap (collision avoidance cannot be assured)
    * @param pose pose to transform
    * @return Path in new frame
@@ -172,4 +192,4 @@ protected:
 
 }  // namespace pb_omni_pid_pursuit_controller
 
-#endif  // pb_omni_pid_pursuit_controller__OMNI_PID_PURSUIT_CONTROLLER_HPP_
+#endif  // PB_OMNI_PID_PURSUIT_CONTROLLER__OMNI_PID_PURSUIT_CONTROLLER_HPP_
