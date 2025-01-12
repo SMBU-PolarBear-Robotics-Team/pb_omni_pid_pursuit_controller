@@ -83,4 +83,4 @@ controller_server:
 
 ## TODO
 
-[] Adjust speed based on curvature
+- [ ] Adjust speed based on curvature
