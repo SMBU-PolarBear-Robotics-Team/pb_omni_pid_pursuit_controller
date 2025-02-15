@@ -58,6 +58,8 @@ void OmniPidPursuitController::configure(
   declare_parameter_if_not_declared(
     node, plugin_name_ + ".translation_kd", rclcpp::ParameterValue(0.3));
   declare_parameter_if_not_declared(
+    node, plugin_name_ + ".enable_rotation", rclcpp::ParameterValue(true));
+  declare_parameter_if_not_declared(
     node, plugin_name_ + ".rotation_kp", rclcpp::ParameterValue(3.0));
   declare_parameter_if_not_declared(
     node, plugin_name_ + ".rotation_ki", rclcpp::ParameterValue(0.1));
@@ -102,6 +104,7 @@ void OmniPidPursuitController::configure(
   node->get_parameter(plugin_name_ + ".translation_kp", translation_kp_);
   node->get_parameter(plugin_name_ + ".translation_ki", translation_ki_);
   node->get_parameter(plugin_name_ + ".translation_kd", translation_kd_);
+  node->get_parameter(plugin_name_ + ".enable_rotation", enable_rotation_);
   node->get_parameter(plugin_name_ + ".rotation_kp", rotation_kp_);
   node->get_parameter(plugin_name_ + ".rotation_ki", rotation_ki_);
   node->get_parameter(plugin_name_ + ".rotation_kd", rotation_kd_);
@@ -217,7 +220,7 @@ geometry_msgs::msg::TwistStamped OmniPidPursuitController::computeVelocityComman
   }
 
   auto lin_vel = move_pid_->calculate(lin_dist, 0);
-  auto angular_vel = heading_pid_->calculate(angle_to_goal, 0);
+  auto angular_vel = enable_rotation_ ? heading_pid_->calculate(angle_to_goal, 0) : 0.0;
 
   applyApproachVelocityScaling(transformed_plan, lin_vel);
 

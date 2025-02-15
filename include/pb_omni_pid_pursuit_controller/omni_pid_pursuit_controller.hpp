@@ -160,6 +160,7 @@ protected:
   std::shared_ptr<PID> heading_pid_;
 
   double translation_kp_, translation_ki_, translation_kd_;
+  bool enable_rotation_;
   double rotation_kp_, rotation_ki_, rotation_kd_;
   double min_max_sum_error_;
   double control_duration_;

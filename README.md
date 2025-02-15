@@ -10,6 +10,7 @@
 | `translation_kp` | The proportional gain for the translation PID controller. Controls how strongly the robot reacts to translation errors. |
 | `translation_ki` | The integral gain for the translation PID controller. Helps eliminate steady-state errors over time. |
 | `translation_kd` | The derivative gain for the translation PID controller. Damps oscillations by reacting to the rate of change of translation errors. |
+| `enable_rotation` | Whether to enable the rotation PID controller. If disabled, the robot will not rotate to face the path's direction. `twist.angular.z` always remains zero. |
 | `rotation_kp` | The proportional gain for the rotation PID controller. Controls how strongly the robot reacts to rotational errors. |
 | `rotation_ki` | The integral gain for the rotation PID controller. Helps eliminate steady-state rotational errors. |
 | `rotation_kd` | The derivative gain for the rotation PID controller. Damps oscillations by reacting to the rate of change of rotational errors. |
@@ -60,6 +61,7 @@ controller_server:
       translation_kp: 3.0
       translation_ki: 0.1
       translation_kd: 0.3
+      enable_rotation: false
       rotation_kp: 3.0
       rotation_ki: 0.1
       rotation_kd: 0.3
