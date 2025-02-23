@@ -1,105 +1,112 @@
-// Copyright 2025 Lihan Chen
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+    // Copyright 2025 Lihan Chen
+    //
+    // Licensed under the Apache License, Version 2.0 (the "License");
+    // you may not use this file except in compliance with the License.
+    // You may obtain a copy of the License at
+    //
+    //     http://www.apache.org/licenses/LICENSE-2.0
+    //
+    // Unless required by applicable law or agreed to in writing, software
+    // distributed under the License is distributed on an "AS IS" BASIS,
+    // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    // See the License for the specific language governing permissions and
+    // limitations under the License.
 
-#include "pb_omni_pid_pursuit_controller/omni_pid_pursuit_controller.hpp"
+    #include "pb_omni_pid_pursuit_controller/omni_pid_pursuit_controller.hpp"
 
-#include "nav2_core/exceptions.hpp"
-#include "nav2_util/geometry_utils.hpp"
-#include "nav2_util/node_utils.hpp"
+    #include "nav2_core/exceptions.hpp"
+    #include "nav2_util/geometry_utils.hpp"
+    #include "nav2_util/node_utils.hpp"
 
-using nav2_util::declare_parameter_if_not_declared;
-using nav2_util::geometry_utils::euclidean_distance;
-using std::abs;
-using std::hypot;
-using std::max;
-using std::min;
-using namespace nav2_costmap_2d;  // NOLINT
-using rcl_interfaces::msg::ParameterType;
+    using nav2_util::declare_parameter_if_not_declared;
+    using nav2_util::geometry_utils::euclidean_distance;
+    using std::abs;
+    using std::hypot;
+    using std::max;
+    using std::min;
+    using namespace nav2_costmap_2d;  // NOLINT
+    using rcl_interfaces::msg::ParameterType;
 
-namespace pb_omni_pid_pursuit_controller
-{
+    namespace pb_omni_pid_pursuit_controller
+    {
 
-void OmniPidPursuitController::configure(
-  const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent, std::string name,
-  std::shared_ptr<tf2_ros::Buffer> tf, std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros)
-{
-  auto node = parent.lock();
-  node_ = parent;
-  if (!node) {
-    throw nav2_core::PlannerException("Unable to lock node!");
-  }
+    void OmniPidPursuitController::configure(
+      const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent, std::string name,
+      std::shared_ptr<tf2_ros::Buffer> tf, std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros)
+    {
+      auto node = parent.lock();
+      node_ = parent;
+      if (!node) {
+        throw nav2_core::PlannerException("Unable to lock node!");
+      }
 
-  costmap_ros_ = costmap_ros;
-  costmap_ = costmap_ros_->getCostmap();
-  tf_ = tf;
-  plugin_name_ = name;
-  logger_ = node->get_logger();
-  clock_ = node->get_clock();
+      costmap_ros_ = costmap_ros;
+      costmap_ = costmap_ros_->getCostmap();
+      tf_ = tf;
+      plugin_name_ = name;
+      logger_ = node->get_logger();
+      clock_ = node->get_clock();
 
-  double transform_tolerance = 1.0;
-  double control_frequency = 20.0;
-  max_robot_pose_search_dist_ = getCostmapMaxExtent();
+      double transform_tolerance = 1.0;
+      double control_frequency = 20.0;
+      max_robot_pose_search_dist_ = getCostmapMaxExtent();
 
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".translation_kp", rclcpp::ParameterValue(3.0));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".translation_ki", rclcpp::ParameterValue(0.1));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".translation_kd", rclcpp::ParameterValue(0.3));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".enable_rotation", rclcpp::ParameterValue(true));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".rotation_kp", rclcpp::ParameterValue(3.0));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".rotation_ki", rclcpp::ParameterValue(0.1));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".rotation_kd", rclcpp::ParameterValue(0.3));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".transform_tolerance", rclcpp::ParameterValue(0.1));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".min_max_sum_error", rclcpp::ParameterValue(1.0));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".lookahead_dist", rclcpp::ParameterValue(0.3));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".use_velocity_scaled_lookahead_dist", rclcpp::ParameterValue(true));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".min_lookahead_dist", rclcpp::ParameterValue(0.2));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".max_lookahead_dist", rclcpp::ParameterValue(1.0));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".lookahead_time", rclcpp::ParameterValue(1.0));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".use_interpolation", rclcpp::ParameterValue(true));
-  declare_parameter_if_not_declared(
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".translation_kp", rclcpp::ParameterValue(3.0));
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".translation_ki", rclcpp::ParameterValue(0.1));
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".translation_kd", rclcpp::ParameterValue(0.3));
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".enable_rotation", rclcpp::ParameterValue(true));
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".rotation_kp", rclcpp::ParameterValue(3.0));
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".rotation_ki", rclcpp::ParameterValue(0.1));
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".rotation_kd", rclcpp::ParameterValue(0.3));
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".transform_tolerance", rclcpp::ParameterValue(0.1));
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".min_max_sum_error", rclcpp::ParameterValue(1.0));
+      declare_parameter_if_not_declared(
+        node, plugin_name_ + ".lookahead_dist", rclcpp::ParameterValue(0.3));
+      declare_parameter_if_not_declared(
+
+        node, plugin_name_ + ".use_velocity_scaled_lookahead_dist", rclcpp::ParameterValue(true));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".min_lookahead_dist", rclcpp::ParameterValue(0.2));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".max_lookahead_dist", rclcpp::ParameterValue(1.0));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".lookahead_time", rclcpp::ParameterValue(1.0));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".use_interpolation", rclcpp::ParameterValue(true));
+declare_parameter_if_not_declared(
     node, plugin_name_ + ".use_rotate_to_heading", rclcpp::ParameterValue(true));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".use_rotate_to_heading_treshold", rclcpp::ParameterValue(0.1));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".min_approach_linear_velocity", rclcpp::ParameterValue(0.05));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".approach_velocity_scaling_dist", rclcpp::ParameterValue(0.6));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".min_translation_speed", rclcpp::ParameterValue(-3.0));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".max_translation_speed", rclcpp::ParameterValue(3.0));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".min_rotation_speed", rclcpp::ParameterValue(-3.0));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".max_rotation_speed", rclcpp::ParameterValue(3.0));
-  declare_parameter_if_not_declared(
-    node, plugin_name_ + ".max_robot_pose_search_dist",
-    rclcpp::ParameterValue(getCostmapMaxExtent()));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".use_rotate_to_heading_treshold", rclcpp::ParameterValue(0.1));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".min_approach_linear_velocity", rclcpp::ParameterValue(0.05));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".approach_velocity_scaling_dist", rclcpp::ParameterValue(0.6));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".min_translation_speed", rclcpp::ParameterValue(-3.0));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".max_translation_speed", rclcpp::ParameterValue(3.0));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".min_rotation_speed", rclcpp::ParameterValue(-3.0));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".max_rotation_speed", rclcpp::ParameterValue(3.0));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".max_robot_pose_search_dist",
+rclcpp::ParameterValue(getCostmapMaxExtent()));
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".curvature_threshold_low", rclcpp::ParameterValue(0.1)); // 新增低曲率阈值参数
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".curvature_threshold_high", rclcpp::ParameterValue(0.3)); // 新增高曲率阈值参数
+declare_parameter_if_not_declared(
+node, plugin_name_ + ".reduction_ratio_at_high_curvature", rclcpp::ParameterValue(0.5)); // 新增高曲率速度降低比例参数  
 
   node->get_parameter(plugin_name_ + ".translation_kp", translation_kp_);
   node->get_parameter(plugin_name_ + ".translation_ki", translation_ki_);
@@ -117,24 +124,28 @@ void OmniPidPursuitController::configure(
   node->get_parameter(plugin_name_ + ".max_lookahead_dist", max_lookahead_dist_);
   node->get_parameter(plugin_name_ + ".lookahead_time", lookahead_time_);
   node->get_parameter(plugin_name_ + ".use_interpolation", use_interpolation_);
-  node->get_parameter(plugin_name_ + ".use_rotate_to_heading", use_rotate_to_heading_);
-  node->get_parameter(
-    plugin_name_ + ".use_rotate_to_heading_treshold", use_rotate_to_heading_treshold_);
-  node->get_parameter(
-    plugin_name_ + ".min_approach_linear_velocity", min_approach_linear_velocity_);
-  node->get_parameter(
-    plugin_name_ + ".approach_velocity_scaling_dist", approach_velocity_scaling_dist_);
-  if (approach_velocity_scaling_dist_ > costmap_->getSizeInMetersX() / 2.0) {
-    RCLCPP_WARN(
-      logger_,
-      "approach_velocity_scaling_dist is larger than forward costmap extent, "
-      "leading to permanent slowdown");
-  }
-  node->get_parameter(plugin_name_ + ".max_translation_speed", max_translation_speed_);
-  node->get_parameter(plugin_name_ + ".min_translation_speed", min_translation_speed_);
-  node->get_parameter(plugin_name_ + ".max_rotation_speed", max_rotation_speed_);
-  node->get_parameter(plugin_name_ + ".min_rotation_speed", min_rotation_speed_);
-  node->get_parameter(plugin_name_ + ".max_robot_pose_search_dist", max_robot_pose_search_dist_);
+
+   node->get_parameter(plugin_name_ + ".use_rotate_to_heading", use_rotate_to_heading_);
+node->get_parameter(
+plugin_name_ + ".use_rotate_to_heading_treshold", use_rotate_to_heading_treshold_);
+node->get_parameter(
+plugin_name_ + ".min_approach_linear_velocity", min_approach_linear_velocity_);
+node->get_parameter(
+plugin_name_ + ".approach_velocity_scaling_dist", approach_velocity_scaling_dist_);
+if (approach_velocity_scaling_dist_ > costmap_->getSizeInMetersX() / 2.0) {
+RCLCPP_WARN(
+logger_,
+"approach_velocity_scaling_dist is larger than forward costmap extent, "
+"leading to permanent slowdown");
+}
+node->get_parameter(plugin_name_ + ".max_translation_speed", max_translation_speed_);
+node->get_parameter(plugin_name_ + ".min_translation_speed", min_translation_speed_);
+node->get_parameter(plugin_name_ + ".max_rotation_speed", max_rotation_speed_);
+node->get_parameter(plugin_name_ + ".min_rotation_speed", min_rotation_speed_);
+node->get_parameter(plugin_name_ + ".max_robot_pose_search_dist", max_robot_pose_search_dist_);
+node->get_parameter(plugin_name_ + ".curvature_threshold_low", curvature_threshold_low_); // 获取低曲率阈值参数
+node->get_parameter(plugin_name_ + ".curvature_threshold_high", curvature_threshold_high_); // 获取高曲率阈值参数
+node->get_parameter(plugin_name_ + ".reduction_ratio_at_high_curvature", reduction_ratio_at_high_curvature_); // 获取高曲率速度降低比例参数  
 
   node->get_parameter("controller_frequency", control_frequency);
 
@@ -167,28 +178,30 @@ void OmniPidPursuitController::activate()
 {
   RCLCPP_INFO(
     logger_,
-    "Activating controller: %s of type "
-    "regulated_pure_pursuit_controller::OmniPidPursuitController",
-    plugin_name_.c_str());
-  local_path_pub_->on_activate();
-  carrot_pub_->on_activate();
-  // Add callback for dynamic parameters
-  auto node = node_.lock();
-  dyn_params_handler_ = node->add_on_set_parameters_callback(
-    std::bind(&OmniPidPursuitController::dynamicParametersCallback, this, std::placeholders::_1));
-}
+
+        "Activating controller: %s of type "
+"regulated_pure_pursuit_controller::OmniPidPursuitController",
+plugin_name_.c_str());
+local_path_pub_->on_activate();
+carrot_pub_->on_activate();
+// Add callback for dynamic parameters
+auto node = node_.lock();
+dyn_params_handler_ = node->add_on_set_parameters_callback(
+std::bind(&OmniPidPursuitController::dynamicParametersCallback, this, std::placeholders::_1));
+}  
 
 void OmniPidPursuitController::deactivate()
-{
-  RCLCPP_INFO(
-    logger_,
-    "Deactivating controller: %s of type "
-    "regulated_pure_pursuit_controller::OmniPidPursuitController",
-    plugin_name_.c_str());
-  local_path_pub_->on_deactivate();
-  carrot_pub_->on_deactivate();
-  dyn_params_handler_.reset();
-}
+
+  {
+RCLCPP_INFO(
+logger_,
+"Deactivating controller: %s of type "
+"regulated_pure_pursuit_controller::OmniPidPursuitController",
+plugin_name_.c_str());
+local_path_pub_->on_deactivate();
+carrot_pub_->on_deactivate();
+dyn_params_handler_.reset();
+}  
 
 geometry_msgs::msg::TwistStamped OmniPidPursuitController::computeVelocityCommands(
   const geometry_msgs::msg::PoseStamped & pose, const geometry_msgs::msg::Twist & velocity,
@@ -222,7 +235,15 @@ geometry_msgs::msg::TwistStamped OmniPidPursuitController::computeVelocityComman
   auto lin_vel = move_pid_->calculate(lin_dist, 0);
   auto angular_vel = enable_rotation_ ? heading_pid_->calculate(angle_to_goal, 0) : 0.0;
 
-  applyApproachVelocityScaling(transformed_plan, lin_vel);
+  // 新增：计算曲率 (三点法)
+  double curvature = calculateThreePointCurvature(transformed_plan, carrot_pose);
+
+  // 修改：应用基于曲率的速度缩放
+  applyApproachVelocityScaling(transformed_plan, lin_vel, curvature);
+
+  // 新增：输出曲率速度缩放日志 (可选)
+  logCurvatureSpeedScalingInfo(curvature, curvature_threshold_low_, curvature_threshold_high_, lin_vel, reduction_ratio_at_high_curvature_);
+
 
   // Transform local frame to global frame to use in collision checking
   nav_msgs::msg::Path costmap_frame_local_plan;
@@ -352,13 +373,14 @@ geometry_msgs::msg::PoseStamped OmniPidPursuitController::getLookAheadPoint(
     // and goal_pose is guaranteed to be outside the circle.
     auto prev_pose_it = std::prev(goal_pose_it);
     auto point = circleSegmentIntersection(
-      prev_pose_it->pose.position, goal_pose_it->pose.position, lookahead_dist);
-    geometry_msgs::msg::PoseStamped pose;
-    pose.header.frame_id = prev_pose_it->header.frame_id;
-    pose.header.stamp = goal_pose_it->header.stamp;
-    pose.pose.position = point;
-    return pose;
-  }
+
+       prev_pose_it->pose.position, goal_pose_it->pose.position, lookahead_dist);
+geometry_msgs::msg::PoseStamped pose;
+pose.header.frame_id = prev_pose_it->header.frame_id;
+pose.header.stamp = goal_pose_it->header.stamp;
+pose.pose.position = point;
+return pose;
+}  
 
   return *goal_pose_it;
 }
@@ -368,16 +390,17 @@ geometry_msgs::msg::Point OmniPidPursuitController::circleSegmentIntersection(
 {
   // Formula for intersection of a line with a circle centered at the origin,
   // modified to always return the point that is on the segment between the two points.
-  // https://mathworld.wolfram.com/Circle-LineIntersection.html
-  // This works because the poses are transformed into the robot frame.
-  // This can be derived from solving the system of equations of a line and a circle
-  // which results in something that is just a reformulation of the quadratic formula.
-  // Interactive illustration in doc/circle-segment-intersection.ipynb as well as at
-  // https://www.desmos.com/calculator/td5cwbuocd
-  double x1 = p1.x;
-  double x2 = p2.x;
-  double y1 = p1.y;
-  double y2 = p2.y;
+
+      // https://mathworld.wolfram.com/Circle-LineIntersection.html
+// This works because the poses are transformed into the robot frame.
+// This can be derived from solving the system of equations of a line and a circle
+// which results in something that is just a reformulation of the quadratic formula.
+// Interactive illustration in doc/circle-segment-intersection.ipynb as well as at
+     // https://www.desmos.com/calculator/td5cwbuocd
+double x1 = p1.x;
+double x2 = p2.x;
+double y1 = p1.y;
+double y2 = p2.y;  
 
   double dx = x2 - x1;
   double dy = y2 - y1;
@@ -414,11 +437,12 @@ bool OmniPidPursuitController::transformPose(
   try {
     tf_->transform(in_pose, out_pose, frame, transform_tolerance_);
     return true;
-  } catch (tf2::TransformException & ex) {
-    RCLCPP_ERROR(logger_, "Exception in transformPose: %s", ex.what());
-  }
-  return false;
+
+   } catch (tf2::TransformException & ex) {
+RCLCPP_ERROR(logger_, "Exception in transformPose: %s", ex.what());
 }
+      return false;
+}  
 
 bool OmniPidPursuitController::isCollisionDetected(const nav_msgs::msg::Path & path)
 {
@@ -491,6 +515,12 @@ rcl_interfaces::msg::SetParametersResult OmniPidPursuitController::dynamicParame
         max_rotation_speed_ = parameter.as_double();
       } else if (name == plugin_name_ + ".min_rotation_speed") {
         min_rotation_speed_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".curvature_threshold_low") { // 新增动态参数回调
+        curvature_threshold_low_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".curvature_threshold_high") { // 新增动态参数回调
+        curvature_threshold_high_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".reduction_ratio_at_high_curvature") { // 新增动态参数回调
+        reduction_ratio_at_high_curvature_ = parameter.as_double();
       }
     } else if (type == ParameterType::PARAMETER_BOOL) {
       if (name == plugin_name_ + ".use_velocity_scaled_lookahead_dist") {
@@ -504,9 +534,10 @@ rcl_interfaces::msg::SetParametersResult OmniPidPursuitController::dynamicParame
   }
   result.successful = true;
   return result;
-}
 
-double OmniPidPursuitController::getLookAheadDistance(const geometry_msgs::msg::Twist & speed)
+    }  
+
+double OmniPidPursuitController::getLookAheadDistance(const geometry_msgs::msg::Twist & speed) const
 {
   // If using velocity-scaled look ahead distances, find and clamp the dist
   // Else, use the static look ahead distance
@@ -518,7 +549,8 @@ double OmniPidPursuitController::getLookAheadDistance(const geometry_msgs::msg::
   }
 
   return lookahead_dist;
-}
+
+   }
 
 double OmniPidPursuitController::approachVelocityScalingFactor(
   const nav_msgs::msg::Path & transformed_path) const
@@ -537,21 +569,85 @@ double OmniPidPursuitController::approachVelocityScalingFactor(
   }
 }
 
+// 新增函数：计算三点法曲率 (新增)
+double OmniPidPursuitController::calculateThreePointCurvature(
+  const nav_msgs::msg::Path & path, const geometry_msgs::msg::PoseStamped & lookahead_pose) const
+{
+  if (path.poses.size() < 3) {
+    return 0.0; // 路径点太少，无法计算曲率，返回 0
+  }
+
+  // 获取最近点、中间点、目标点
+  geometry_msgs::msg::PoseStamped pose_near = path.poses[path.poses.size() - 2]; // 倒数第二个点 (最近点)
+  geometry_msgs::msg::PoseStamped pose_mid = path.poses.back(); // 最后一个点 (中间点)
+  geometry_msgs::msg::PoseStamped pose_far = lookahead_pose; // 前瞻点 (目标点)
+
+  // 计算三点之间的距离
+  double dist_near_mid = euclidean_distance(pose_near, pose_mid);
+  double dist_mid_far = euclidean_distance(pose_mid, pose_far);
+  double dist_far_near = euclidean_distance(pose_far, pose_near);
+
+  // 使用海伦公式计算三角形面积
+  double s = (dist_near_mid + dist_mid_far + dist_far_near) / 2.0;
+  double area = std::sqrt(s * (s - dist_near_mid) * (s - dist_mid_far) * (s - dist_far_near));
+
+  // 计算三角形外接圆半径
+  double radius = (dist_near_mid * dist_mid_far * dist_far_near) / (4.0 * area);
+
+  // 曲率 = 1 / 半径
+  if (radius > 0.0 && !std::isnan(radius)) {
+    return 1.0 / radius;
+  } else {
+    return 0.0; // 半径为 0 或 NaN，曲率返回 0
+  }
+}
+
+
+// 修改 applyApproachVelocityScaling 函数，使其接受曲率参数 (修改)
 void OmniPidPursuitController::applyApproachVelocityScaling(
-  const nav_msgs::msg::Path & path, double & linear_vel) const
+  const nav_msgs::msg::Path & path, double & linear_vel, double curvature) const
 {
   double approach_vel = linear_vel;
-  double velocity_scaling = approachVelocityScalingFactor(path);
-  double unbounded_vel = approach_vel * velocity_scaling;
+  // double velocity_scaling = approachVelocityScalingFactor(path); // 移除原有的距离速度缩放因子
+
+  // 基于曲率进行速度缩放
+  if (curvature > curvature_threshold_high_) {
+    // 高曲率区域：大幅减速
+    approach_vel *= (1.0 - reduction_ratio_at_high_curvature_);
+    RCLCPP_INFO_STREAM(logger_, "High curvature detected, curvature: " << curvature << ", speed reduced to: " << approach_vel); // 打印高曲率减速信息
+  } else if (curvature > curvature_threshold_low_) {
+    // 中等曲率区域：逐渐减速
+
+      approach_vel *= (1.0 - (reduction_ratio_at_high_curvature_ * (curvature - curvature_threshold_low_) / (curvature_threshold_high_ - curvature_threshold_low_)));
+RCLCPP_INFO_STREAM(logger_, "Medium curvature detected, curvature: " << curvature << ", speed reduced to: " << approach_vel); // 打印中曲率减速信息
+} else {
+// 低曲率区域：不减速
+RCLCPP_INFO_STREAM(logger_, "Low curvature detected, curvature: " << curvature << ", no speed reduction."); // 打印低曲率不减速信息
+}  
+
+  double unbounded_vel = approach_vel; // * velocity_scaling; //  不再使用距离速度缩放
   if (unbounded_vel < min_approach_linear_velocity_) {
     approach_vel = min_approach_linear_velocity_;
   } else {
-    approach_vel *= velocity_scaling;
+    approach_vel = unbounded_vel; // * velocity_scaling; // 不再使用距离速度缩放
   }
 
   // Use the lowest velocity between approach and other constraints, if all overlapping
   linear_vel = std::min(linear_vel, approach_vel);
 }
+
+
+// 新增函数：输出曲率速度缩放日志 (新增，可选)
+void OmniPidPursuitController::logCurvatureSpeedScalingInfo(
+  double curvature, double curvature_threshold_low, double curvature_threshold_high, double original_linear_vel, double reduction_ratio_at_high_curvature) const
+{
+  RCLCPP_DEBUG_STREAM(logger_, "Curvature: " << curvature
+                                    << ", Low Threshold: " << curvature_threshold_low
+                                    << ", High Threshold: " << curvature_threshold_high
+                                    << ", Original Linear Vel: " << original_linear_vel
+                                    << ", Reduction Ratio at High Curvature: " << reduction_ratio_at_high_curvature);
+}
+
 
 }  // namespace pb_omni_pid_pursuit_controller
 

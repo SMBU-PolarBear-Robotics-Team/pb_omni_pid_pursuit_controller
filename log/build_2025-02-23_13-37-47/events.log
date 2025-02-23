@@ -1,0 +1,192 @@
+[0.000000] (-) TimerEvent: {}
+[0.000106] (pb_omni_pid_pursuit_controller) JobQueued: {'identifier': 'pb_omni_pid_pursuit_controller', 'dependencies': OrderedDict()}
+[0.000136] (pb_omni_pid_pursuit_controller) JobStarted: {'identifier': 'pb_omni_pid_pursuit_controller'}
+[0.007701] (pb_omni_pid_pursuit_controller) JobProgress: {'identifier': 'pb_omni_pid_pursuit_controller', 'progress': 'cmake'}
+[0.008176] (pb_omni_pid_pursuit_controller) Command: {'cmd': ['/usr/bin/cmake', '/home/gabriel/pb_omni_pid_pursuit_controller', '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-DCMAKE_BUILD_TYPE=Release', '-DAMENT_CMAKE_SYMLINK_INSTALL=1', '-DCMAKE_INSTALL_PREFIX=/home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller'], 'cwd': '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LANGUAGE', 'zh_CN:zh:en_US:en'), ('LC_TIME', 'zh_CN.UTF-8'), ('USER', 'gabriel'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/local/usr/cuda-12.6/lib64/:/local/usr/cuda-12.6/lib64/:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/gabriel'), ('CHROME_DESKTOP', 'code.desktop'), ('OLDPWD', '/home/gabriel/pb_omni_pid_pursuit_controller'), ('LESS', '-R'), ('DESKTOP_SESSION', 'ubuntu'), ('TERM_PROGRAM_VERSION', '1.95.3'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ZSH', '/home/gabriel/.oh-my-zsh'), ('LSCOLORS', 'Gxfxcxdxbxegedabagacad'), ('GTK_MODULES', 'gail:atk-bridge'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('PAGER', 'less'), ('ROS_PYTHON_VERSION', '3'), ('INTEL_OPENVINO_DIR', '/home/gabriel/pb_omni_pid_pursuit_controller'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('LC_MONETARY', 'zh_CN.UTF-8'), ('MANAGERPID', '2385'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('SYSTEMD_EXEC_PID', '2713'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus,guid=8bf8e35793e69c64b47891bd67ba906e'), ('DBUS_STARTER_BUS_TYPE', 'session'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '7261'), ('COLORTERM', 'truecolor'), ('IM_CONFIG_PHASE', '1'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'gabriel'), ('GTK_IM_MODULE', 'fcitx'), ('_', '/usr/bin/colcon'), ('JOURNAL_STREAM', '8:33536'), ('XDG_SESSION_CLASS', 'user'), ('ROS_VERSION', '2'), ('USER_ZDOTDIR', '/home/gabriel'), ('USERNAME', 'gabriel'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/local/usr/cuda-12.6/bin:/local/usr/cuda-12.6/bin:/opt/ros/humble/bin:/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/gabriel-Legion-Y7000-2019:@/tmp/.ICE-unix/2713,unix/gabriel-Legion-Y7000-2019:/tmp/.ICE-unix/2713'), ('INVOCATION_ID', 'd0e5a9116be84f35b452e4e3d053dcf9'), ('LC_ADDRESS', 'zh_CN.UTF-8'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('XDG_MENU_PREFIX', 'gnome-'), ('GDK_BACKEND', 'x11'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/a64bbf65_60a0_4a60_8564_08fe1531db3a'), ('DISPLAY', ':1'), ('LANG', 'zh_CN.UTF-8'), ('LC_TELEPHONE', 'zh_CN.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('RMW_IMPLEMENTATION', 'rmw_fastrtps_cpp'), ('VSCODE_INJECTION', '1'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XMODIFIERS', '@im=fcitx'), ('GNOME_TERMINAL_SERVICE', ':1.150'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('TERM_PROGRAM', 'vscode'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-0181ffcfed.sock'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('ROS_DOMAIN_ID', '10'), ('LC_NAME', 'zh_CN.UTF-8'), ('SHELL', '/usr/bin/zsh'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('NO_AT_BRIDGE', '1'), ('LC_MEASUREMENT', 'zh_CN.UTF-8'), ('LC_IDENTIFICATION', 'zh_CN.UTF-8'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('QT_IM_MODULE', 'fcitx'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLUTTER_IM_MODULE', 'fcitx'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('DBUS_STARTER_ADDRESS', 'unix:path=/run/user/1000/bus,guid=8bf8e35793e69c64b47891bd67ba906e'), ('ZDOTDIR', '/home/gabriel'), ('LC_NUMERIC', 'zh_CN.UTF-8'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LDS_MODEL', 'LDS-01'), ('LC_PAPER', 'zh_CN.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', ':/opt/ros/humble/share/serial_driver/cmake:/opt/ros/humble/share/serial_driver/cmake:/opt/ros/humble')]), 'shell': False}
+[0.053630] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[0.099335] (-) TimerEvent: {}
+[0.099743] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[0.108079] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.167830] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[0.177360] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[0.177560] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[0.177901] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[0.181193] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.199433] (-) TimerEvent: {}
+[0.248818] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.255500] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.255850] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.256304] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.258421] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found ament_cmake_auto: 1.3.10 (/opt/ros/humble/share/ament_cmake_auto/cmake)\n'}
+[0.299517] (-) TimerEvent: {}
+[0.399754] (-) TimerEvent: {}
+[0.500030] (-) TimerEvent: {}
+[0.600293] (-) TimerEvent: {}
+[0.610753] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter \n'}
+[0.677750] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Override CMake install command with custom implementation using symlinks instead of copying resources\n'}
+[0.700426] (-) TimerEvent: {}
+[0.800703] (-) TimerEvent: {}
+[0.823308] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[0.829904] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[0.840627] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[0.854327] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.872623] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[0.900803] (-) TimerEvent: {}
+[0.922701] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[0.925621] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.7 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[1.000905] (-) TimerEvent: {}
+[1.005347] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  \n'}
+[1.034024] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/humble/include  \n'}
+[1.079383] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[1.088969] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Looking for pthread.h\n'}
+[1.101005] (-) TimerEvent: {}
+[1.149273] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Looking for pthread.h - found\n'}
+[1.149665] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n'}
+[1.201107] (-) TimerEvent: {}
+[1.215260] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success\n'}
+[1.216794] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found Threads: TRUE  \n'}
+[1.301217] (-) TimerEvent: {}
+[1.401476] (-) TimerEvent: {}
+[1.501687] (-) TimerEvent: {}
+[1.590310] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found Eigen3: TRUE (found version "3.4.0") \n'}
+[1.590529] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Ensuring Eigen3 include directory is part of orocos-kdl CMake target\n'}
+[1.601819] (-) TimerEvent: {}
+[1.702092] (-) TimerEvent: {}
+[1.789447] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.12.11 (/opt/ros/humble/share/ament_lint_auto/cmake)\n'}
+[1.802177] (-) TimerEvent: {}
+[1.817929] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b"-- Added test 'copyright' to check source files copyright and LICENSE\n"}
+[1.824574] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b"-- Added test 'cppcheck' to perform static code analysis on C / C++ code\n"}
+[1.824898] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Configured cppcheck include dirs: /home/gabriel/pb_omni_pid_pursuit_controller/include\n'}
+[1.824980] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Configured cppcheck exclude dirs and/or files: \n'}
+[1.832148] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b"-- Added test 'cpplint' to check C / C++ code against the Google style\n"}
+[1.832279] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Configured cpplint exclude dirs and/or files: \n'}
+[1.834938] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[1.837072] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[1.844145] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b"-- Added test 'clang_format' to check C / C++ code style\n"}
+[1.848789] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Configuring done\n'}
+[1.902303] (-) TimerEvent: {}
+[1.912364] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Generating done\n'}
+[1.914834] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Build files have been written to: /home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller\n'}
+[1.924242] (pb_omni_pid_pursuit_controller) CommandEnded: {'returncode': 0}
+[1.924835] (pb_omni_pid_pursuit_controller) JobProgress: {'identifier': 'pb_omni_pid_pursuit_controller', 'progress': 'build'}
+[1.925931] (pb_omni_pid_pursuit_controller) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller', '--', '-j12', '-l12'], 'cwd': '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LANGUAGE', 'zh_CN:zh:en_US:en'), ('LC_TIME', 'zh_CN.UTF-8'), ('USER', 'gabriel'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/local/usr/cuda-12.6/lib64/:/local/usr/cuda-12.6/lib64/:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/gabriel'), ('CHROME_DESKTOP', 'code.desktop'), ('OLDPWD', '/home/gabriel/pb_omni_pid_pursuit_controller'), ('LESS', '-R'), ('DESKTOP_SESSION', 'ubuntu'), ('TERM_PROGRAM_VERSION', '1.95.3'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ZSH', '/home/gabriel/.oh-my-zsh'), ('LSCOLORS', 'Gxfxcxdxbxegedabagacad'), ('GTK_MODULES', 'gail:atk-bridge'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('PAGER', 'less'), ('ROS_PYTHON_VERSION', '3'), ('INTEL_OPENVINO_DIR', '/home/gabriel/pb_omni_pid_pursuit_controller'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('LC_MONETARY', 'zh_CN.UTF-8'), ('MANAGERPID', '2385'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('SYSTEMD_EXEC_PID', '2713'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus,guid=8bf8e35793e69c64b47891bd67ba906e'), ('DBUS_STARTER_BUS_TYPE', 'session'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '7261'), ('COLORTERM', 'truecolor'), ('IM_CONFIG_PHASE', '1'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'gabriel'), ('GTK_IM_MODULE', 'fcitx'), ('_', '/usr/bin/colcon'), ('JOURNAL_STREAM', '8:33536'), ('XDG_SESSION_CLASS', 'user'), ('ROS_VERSION', '2'), ('USER_ZDOTDIR', '/home/gabriel'), ('USERNAME', 'gabriel'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/local/usr/cuda-12.6/bin:/local/usr/cuda-12.6/bin:/opt/ros/humble/bin:/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/gabriel-Legion-Y7000-2019:@/tmp/.ICE-unix/2713,unix/gabriel-Legion-Y7000-2019:/tmp/.ICE-unix/2713'), ('INVOCATION_ID', 'd0e5a9116be84f35b452e4e3d053dcf9'), ('LC_ADDRESS', 'zh_CN.UTF-8'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('XDG_MENU_PREFIX', 'gnome-'), ('GDK_BACKEND', 'x11'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/a64bbf65_60a0_4a60_8564_08fe1531db3a'), ('DISPLAY', ':1'), ('LANG', 'zh_CN.UTF-8'), ('LC_TELEPHONE', 'zh_CN.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('RMW_IMPLEMENTATION', 'rmw_fastrtps_cpp'), ('VSCODE_INJECTION', '1'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XMODIFIERS', '@im=fcitx'), ('GNOME_TERMINAL_SERVICE', ':1.150'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('TERM_PROGRAM', 'vscode'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-0181ffcfed.sock'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('ROS_DOMAIN_ID', '10'), ('LC_NAME', 'zh_CN.UTF-8'), ('SHELL', '/usr/bin/zsh'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('NO_AT_BRIDGE', '1'), ('LC_MEASUREMENT', 'zh_CN.UTF-8'), ('LC_IDENTIFICATION', 'zh_CN.UTF-8'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('QT_IM_MODULE', 'fcitx'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLUTTER_IM_MODULE', 'fcitx'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('DBUS_STARTER_ADDRESS', 'unix:path=/run/user/1000/bus,guid=8bf8e35793e69c64b47891bd67ba906e'), ('ZDOTDIR', '/home/gabriel'), ('LC_NUMERIC', 'zh_CN.UTF-8'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LDS_MODEL', 'LDS-01'), ('LC_PAPER', 'zh_CN.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', ':/opt/ros/humble/share/serial_driver/cmake:/opt/ros/humble/share/serial_driver/cmake:/opt/ros/humble')]), 'shell': False}
+[1.968269] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'[ 33%] \x1b[32mBuilding CXX object CMakeFiles/pb_omni_pid_pursuit_controller.dir/src/omni_pid_pursuit_controller.cpp.o\x1b[0m\n'}
+[1.968540] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'[ 66%] \x1b[32mBuilding CXX object CMakeFiles/pb_omni_pid_pursuit_controller.dir/src/pid.cpp.o\x1b[0m\n'}
+[2.002392] (-) TimerEvent: {}
+[2.102627] (-) TimerEvent: {}
+[2.202858] (-) TimerEvent: {}
+[2.303112] (-) TimerEvent: {}
+[2.403413] (-) TimerEvent: {}
+[2.503633] (-) TimerEvent: {}
+[2.603896] (-) TimerEvent: {}
+[2.704146] (-) TimerEvent: {}
+[2.804406] (-) TimerEvent: {}
+[2.904648] (-) TimerEvent: {}
+[3.004906] (-) TimerEvent: {}
+[3.105169] (-) TimerEvent: {}
+[3.205394] (-) TimerEvent: {}
+[3.305620] (-) TimerEvent: {}
+[3.405929] (-) TimerEvent: {}
+[3.506190] (-) TimerEvent: {}
+[3.606452] (-) TimerEvent: {}
+[3.706714] (-) TimerEvent: {}
+[3.807006] (-) TimerEvent: {}
+[3.907252] (-) TimerEvent: {}
+[4.007514] (-) TimerEvent: {}
+[4.107782] (-) TimerEvent: {}
+[4.207997] (-) TimerEvent: {}
+[4.308256] (-) TimerEvent: {}
+[4.408514] (-) TimerEvent: {}
+[4.508847] (-) TimerEvent: {}
+[4.609116] (-) TimerEvent: {}
+[4.709368] (-) TimerEvent: {}
+[4.809575] (-) TimerEvent: {}
+[4.909834] (-) TimerEvent: {}
+[5.010061] (-) TimerEvent: {}
+[5.110297] (-) TimerEvent: {}
+[5.210557] (-) TimerEvent: {}
+[5.310880] (-) TimerEvent: {}
+[5.411214] (-) TimerEvent: {}
+[5.511505] (-) TimerEvent: {}
+[5.611777] (-) TimerEvent: {}
+[5.711998] (-) TimerEvent: {}
+[5.812214] (-) TimerEvent: {}
+[5.912492] (-) TimerEvent: {}
+[6.012747] (-) TimerEvent: {}
+[6.112998] (-) TimerEvent: {}
+[6.213213] (-) TimerEvent: {}
+[6.313525] (-) TimerEvent: {}
+[6.413787] (-) TimerEvent: {}
+[6.513993] (-) TimerEvent: {}
+[6.614203] (-) TimerEvent: {}
+[6.714460] (-) TimerEvent: {}
+[6.814712] (-) TimerEvent: {}
+[6.914969] (-) TimerEvent: {}
+[7.015177] (-) TimerEvent: {}
+[7.115434] (-) TimerEvent: {}
+[7.215650] (-) TimerEvent: {}
+[7.315876] (-) TimerEvent: {}
+[7.416112] (-) TimerEvent: {}
+[7.516316] (-) TimerEvent: {}
+[7.616559] (-) TimerEvent: {}
+[7.716801] (-) TimerEvent: {}
+[7.817046] (-) TimerEvent: {}
+[7.917304] (-) TimerEvent: {}
+[8.017508] (-) TimerEvent: {}
+[8.117747] (-) TimerEvent: {}
+[8.217991] (-) TimerEvent: {}
+[8.318242] (-) TimerEvent: {}
+[8.418476] (-) TimerEvent: {}
+[8.518685] (-) TimerEvent: {}
+[8.618949] (-) TimerEvent: {}
+[8.719201] (-) TimerEvent: {}
+[8.819408] (-) TimerEvent: {}
+[8.919609] (-) TimerEvent: {}
+[9.019934] (-) TimerEvent: {}
+[9.120170] (-) TimerEvent: {}
+[9.220427] (-) TimerEvent: {}
+[9.320691] (-) TimerEvent: {}
+[9.420895] (-) TimerEvent: {}
+[9.521108] (-) TimerEvent: {}
+[9.621360] (-) TimerEvent: {}
+[9.721608] (-) TimerEvent: {}
+[9.731843] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX shared library libpb_omni_pid_pursuit_controller.so\x1b[0m\n'}
+[9.821654] (-) TimerEvent: {}
+[9.921887] (-) TimerEvent: {}
+[9.984244] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'[100%] Built target pb_omni_pid_pursuit_controller\n'}
+[9.993188] (pb_omni_pid_pursuit_controller) CommandEnded: {'returncode': 0}
+[10.017070] (pb_omni_pid_pursuit_controller) JobProgress: {'identifier': 'pb_omni_pid_pursuit_controller', 'progress': 'install'}
+[10.021966] (-) TimerEvent: {}
+[10.024655] (pb_omni_pid_pursuit_controller) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller'], 'cwd': '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller', 'env': OrderedDict([('GJS_DEBUG_TOPICS', 'JS ERROR;JS LOG'), ('LANGUAGE', 'zh_CN:zh:en_US:en'), ('LC_TIME', 'zh_CN.UTF-8'), ('USER', 'gabriel'), ('XDG_SESSION_TYPE', 'x11'), ('GIT_ASKPASS', '/usr/share/code/resources/app/extensions/git/dist/askpass.sh'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/local/usr/cuda-12.6/lib64/:/local/usr/cuda-12.6/lib64/:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/gabriel'), ('CHROME_DESKTOP', 'code.desktop'), ('OLDPWD', '/home/gabriel/pb_omni_pid_pursuit_controller'), ('LESS', '-R'), ('DESKTOP_SESSION', 'ubuntu'), ('TERM_PROGRAM_VERSION', '1.95.3'), ('GIO_LAUNCHED_DESKTOP_FILE', '/usr/share/applications/code.desktop'), ('ZSH', '/home/gabriel/.oh-my-zsh'), ('LSCOLORS', 'Gxfxcxdxbxegedabagacad'), ('GTK_MODULES', 'gail:atk-bridge'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('PAGER', 'less'), ('ROS_PYTHON_VERSION', '3'), ('INTEL_OPENVINO_DIR', '/home/gabriel/pb_omni_pid_pursuit_controller'), ('VSCODE_GIT_ASKPASS_MAIN', '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js'), ('LC_MONETARY', 'zh_CN.UTF-8'), ('MANAGERPID', '2385'), ('VSCODE_GIT_ASKPASS_NODE', '/usr/share/code/code'), ('SYSTEMD_EXEC_PID', '2713'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus,guid=8bf8e35793e69c64b47891bd67ba906e'), ('DBUS_STARTER_BUS_TYPE', 'session'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '7261'), ('COLORTERM', 'truecolor'), ('IM_CONFIG_PHASE', '1'), ('ROS_DISTRO', 'humble'), ('LOGNAME', 'gabriel'), ('GTK_IM_MODULE', 'fcitx'), ('_', '/usr/bin/colcon'), ('JOURNAL_STREAM', '8:33536'), ('XDG_SESSION_CLASS', 'user'), ('ROS_VERSION', '2'), ('USER_ZDOTDIR', '/home/gabriel'), ('USERNAME', 'gabriel'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('WINDOWPATH', '2'), ('PATH', '/local/usr/cuda-12.6/bin:/local/usr/cuda-12.6/bin:/opt/ros/humble/bin:/home/gabriel/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/gabriel-Legion-Y7000-2019:@/tmp/.ICE-unix/2713,unix/gabriel-Legion-Y7000-2019:/tmp/.ICE-unix/2713'), ('INVOCATION_ID', 'd0e5a9116be84f35b452e4e3d053dcf9'), ('LC_ADDRESS', 'zh_CN.UTF-8'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('XDG_MENU_PREFIX', 'gnome-'), ('GDK_BACKEND', 'x11'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/a64bbf65_60a0_4a60_8564_08fe1531db3a'), ('DISPLAY', ':1'), ('LANG', 'zh_CN.UTF-8'), ('LC_TELEPHONE', 'zh_CN.UTF-8'), ('XDG_CURRENT_DESKTOP', 'Unity'), ('RMW_IMPLEMENTATION', 'rmw_fastrtps_cpp'), ('VSCODE_INJECTION', '1'), ('XAUTHORITY', '/run/user/1000/gdm/Xauthority'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XMODIFIERS', '@im=fcitx'), ('GNOME_TERMINAL_SERVICE', ':1.150'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('TERM_PROGRAM', 'vscode'), ('VSCODE_GIT_IPC_HANDLE', '/run/user/1000/vscode-git-0181ffcfed.sock'), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('ORIGINAL_XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('AMENT_PREFIX_PATH', '/opt/ros/humble'), ('ROS_DOMAIN_ID', '10'), ('LC_NAME', 'zh_CN.UTF-8'), ('SHELL', '/usr/bin/zsh'), ('QT_ACCESSIBILITY', '1'), ('GDMSESSION', 'ubuntu'), ('NO_AT_BRIDGE', '1'), ('LC_MEASUREMENT', 'zh_CN.UTF-8'), ('LC_IDENTIFICATION', 'zh_CN.UTF-8'), ('GPG_AGENT_INFO', '/run/user/1000/gnupg/S.gpg-agent:0:1'), ('GJS_DEBUG_OUTPUT', 'stderr'), ('QT_IM_MODULE', 'fcitx'), ('VSCODE_GIT_ASKPASS_EXTRA_ARGS', ''), ('PWD', '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('CLUTTER_IM_MODULE', 'fcitx'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('DBUS_STARTER_ADDRESS', 'unix:path=/run/user/1000/bus,guid=8bf8e35793e69c64b47891bd67ba906e'), ('ZDOTDIR', '/home/gabriel'), ('LC_NUMERIC', 'zh_CN.UTF-8'), ('PYTHONPATH', '/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LDS_MODEL', 'LDS-01'), ('LC_PAPER', 'zh_CN.UTF-8'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', ':/opt/ros/humble/share/serial_driver/cmake:/opt/ros/humble/share/serial_driver/cmake:/opt/ros/humble')]), 'shell': False}
+[10.031382] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Install configuration: "Release"\n'}
+[10.031957] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Execute custom install script\n'}
+[10.032288] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller//pb_omni_pid_pursuit_controller.xml\n'}
+[10.040219] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/include/pb_omni_pid_pursuit_controller/omni_pid_pursuit_controller.hpp\n'}
+[10.047327] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/include/pb_omni_pid_pursuit_controller/pid.hpp\n'}
+[10.054395] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/library_path.sh\n'}
+[10.062036] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/library_path.dsv\n'}
+[10.069055] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/lib/libpb_omni_pid_pursuit_controller.so\n'}
+[10.075871] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/ament_index/resource_index/package_run_dependencies/pb_omni_pid_pursuit_controller\n'}
+[10.082697] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/ament_index/resource_index/parent_prefix_path/pb_omni_pid_pursuit_controller\n'}
+[10.089418] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/ament_prefix_path.sh\n'}
+[10.096048] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/ament_prefix_path.dsv\n'}
+[10.102935] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/path.sh\n'}
+[10.109751] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/path.dsv\n'}
+[10.116597] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/local_setup.bash\n'}
+[10.122050] (-) TimerEvent: {}
+[10.123023] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/local_setup.sh\n'}
+[10.130510] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/local_setup.zsh\n'}
+[10.137154] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/local_setup.dsv\n'}
+[10.143915] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/package.dsv\n'}
+[10.150919] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/ament_index/resource_index/packages/pb_omni_pid_pursuit_controller\n'}
+[10.157704] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/ament_index/resource_index/nav2_core__pluginlib__plugin/pb_omni_pid_pursuit_controller\n'}
+[10.164654] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/ament_cmake_export_dependencies-extras.cmake\n'}
+[10.171151] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/ament_cmake_export_include_directories-extras.cmake\n'}
+[10.177711] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/ament_cmake_export_libraries-extras.cmake\n'}
+[10.184140] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/pb_omni_pid_pursuit_controllerConfig.cmake\n'}
+[10.190551] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/pb_omni_pid_pursuit_controllerConfig-version.cmake\n'}
+[10.197314] (pb_omni_pid_pursuit_controller) StdoutLine: {'line': b'-- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/package.xml\n'}
+[10.205242] (pb_omni_pid_pursuit_controller) CommandEnded: {'returncode': 0}
+[10.222169] (-) TimerEvent: {}
+[10.247333] (pb_omni_pid_pursuit_controller) JobEnded: {'identifier': 'pb_omni_pid_pursuit_controller', 'rc': 0}
+[10.247967] (-) EventReactorShutdown: {}

@@ -1,0 +1,82 @@
+[0.010s] Invoking command in '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/gabriel/pb_omni_pid_pursuit_controller -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller
+[0.054s] -- The C compiler identification is GNU 11.4.0
+[0.100s] -- The CXX compiler identification is GNU 11.4.0
+[0.108s] -- Detecting C compiler ABI info
+[0.168s] -- Detecting C compiler ABI info - done
+[0.177s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.177s] -- Detecting C compile features
+[0.178s] -- Detecting C compile features - done
+[0.181s] -- Detecting CXX compiler ABI info
+[0.249s] -- Detecting CXX compiler ABI info - done
+[0.255s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.256s] -- Detecting CXX compile features
+[0.256s] -- Detecting CXX compile features - done
+[0.258s] -- Found ament_cmake_auto: 1.3.10 (/opt/ros/humble/share/ament_cmake_auto/cmake)
+[0.611s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[0.678s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.823s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.830s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.841s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.854s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.873s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.923s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.926s] -- Found rmw_fastrtps_cpp: 6.2.7 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[1.005s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[1.034s] -- Found FastRTPS: /opt/ros/humble/include  
+[1.079s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.089s] -- Looking for pthread.h
+[1.149s] -- Looking for pthread.h - found
+[1.150s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[1.215s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[1.217s] -- Found Threads: TRUE  
+[1.590s] -- Found Eigen3: TRUE (found version "3.4.0") 
+[1.590s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[1.789s] -- Found ament_lint_auto: 0.12.11 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[1.818s] -- Added test 'copyright' to check source files copyright and LICENSE
+[1.824s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[1.825s] -- Configured cppcheck include dirs: /home/gabriel/pb_omni_pid_pursuit_controller/include
+[1.825s] -- Configured cppcheck exclude dirs and/or files: 
+[1.832s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[1.832s] -- Configured cpplint exclude dirs and/or files: 
+[1.835s] -- Added test 'lint_cmake' to check CMake code style
+[1.837s] -- Added test 'xmllint' to check XML markup files
+[1.844s] -- Added test 'clang_format' to check C / C++ code style
+[1.849s] -- Configuring done
+[1.912s] -- Generating done
+[1.915s] -- Build files have been written to: /home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller
+[1.924s] Invoked command in '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/gabriel/pb_omni_pid_pursuit_controller -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller
+[1.926s] Invoking command in '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller -- -j12 -l12
+[1.968s] [ 33%] [32mBuilding CXX object CMakeFiles/pb_omni_pid_pursuit_controller.dir/src/omni_pid_pursuit_controller.cpp.o[0m
+[1.968s] [ 66%] [32mBuilding CXX object CMakeFiles/pb_omni_pid_pursuit_controller.dir/src/pid.cpp.o[0m
+[9.732s] [100%] [32m[1mLinking CXX shared library libpb_omni_pid_pursuit_controller.so[0m
+[9.984s] [100%] Built target pb_omni_pid_pursuit_controller
+[9.993s] Invoked command in '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller -- -j12 -l12
+[10.025s] Invoking command in '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller
+[10.031s] -- Install configuration: "Release"
+[10.032s] -- Execute custom install script
+[10.032s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller//pb_omni_pid_pursuit_controller.xml
+[10.040s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/include/pb_omni_pid_pursuit_controller/omni_pid_pursuit_controller.hpp
+[10.047s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/include/pb_omni_pid_pursuit_controller/pid.hpp
+[10.054s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/library_path.sh
+[10.062s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/library_path.dsv
+[10.069s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/lib/libpb_omni_pid_pursuit_controller.so
+[10.076s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/ament_index/resource_index/package_run_dependencies/pb_omni_pid_pursuit_controller
+[10.083s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/ament_index/resource_index/parent_prefix_path/pb_omni_pid_pursuit_controller
+[10.089s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/ament_prefix_path.sh
+[10.096s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/ament_prefix_path.dsv
+[10.103s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/path.sh
+[10.110s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/environment/path.dsv
+[10.117s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/local_setup.bash
+[10.123s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/local_setup.sh
+[10.130s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/local_setup.zsh
+[10.137s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/local_setup.dsv
+[10.144s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/package.dsv
+[10.151s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/ament_index/resource_index/packages/pb_omni_pid_pursuit_controller
+[10.158s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/ament_index/resource_index/nav2_core__pluginlib__plugin/pb_omni_pid_pursuit_controller
+[10.165s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/ament_cmake_export_dependencies-extras.cmake
+[10.171s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/ament_cmake_export_include_directories-extras.cmake
+[10.178s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/ament_cmake_export_libraries-extras.cmake
+[10.184s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/pb_omni_pid_pursuit_controllerConfig.cmake
+[10.190s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/cmake/pb_omni_pid_pursuit_controllerConfig-version.cmake
+[10.197s] -- Symlinking: /home/gabriel/pb_omni_pid_pursuit_controller/install/pb_omni_pid_pursuit_controller/share/pb_omni_pid_pursuit_controller/package.xml
+[10.205s] Invoked command in '/home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/gabriel/pb_omni_pid_pursuit_controller/build/pb_omni_pid_pursuit_controller

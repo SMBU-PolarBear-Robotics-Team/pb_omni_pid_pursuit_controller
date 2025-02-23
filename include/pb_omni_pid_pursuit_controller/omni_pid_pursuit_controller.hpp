@@ -140,13 +140,25 @@ protected:
   rcl_interfaces::msg::SetParametersResult dynamicParametersCallback(
     std::vector<rclcpp::Parameter> parameters);
 
-  double getLookAheadDistance(const geometry_msgs::msg::Twist & speed);
+  // 修改 getLookAheadDistance 函数，使其返回固定前瞻距离 (修改)
+  double getLookAheadDistance(const geometry_msgs::msg::Twist & /*speed*/) const; // 去除 speed 参数
 
   double approachVelocityScalingFactor(const nav_msgs::msg::Path & path) const;
 
-  void applyApproachVelocityScaling(const nav_msgs::msg::Path & path, double & linear_vel) const;
+  // 修改 applyApproachVelocityScaling 函数，使其接受曲率参数 (修改)
+  void applyApproachVelocityScaling(
+    const nav_msgs::msg::Path & path, double & linear_vel, double curvature) const; // 新增 curvature 参数
 
   bool isCollisionDetected(const nav_msgs::msg::Path & path);
+
+  // 新增函数：计算三点法曲率 (新增)
+  double calculateThreePointCurvature(
+    const nav_msgs::msg::Path & path, const geometry_msgs::msg::PoseStamped & lookahead_pose) const;
+
+  // 新增函数：输出曲率速度缩放日志 (新增，可选)
+  void logCurvatureSpeedScalingInfo(
+    double curvature, double curvature_threshold_low, double curvature_threshold_high, double original_linear_vel, double reduction_ratio_at_high_curvature) const;
+
 
   rclcpp_lifecycle::LifecycleNode::WeakPtr node_;
   std::shared_ptr<tf2_ros::Buffer> tf_;
@@ -189,6 +201,12 @@ protected:
   // Dynamic parameters handler
   std::mutex mutex_;
   rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr dyn_params_handler_;
+
+  // 新增：曲率速度缩放相关参数 (新增)
+  double curvature_threshold_low_; // 低曲率阈值
+  double curvature_threshold_high_; // 高曲率阈值
+  double reduction_ratio_at_high_curvature_; // 高曲率速度降低比例
+
 };
 
 }  // namespace pb_omni_pid_pursuit_controller
