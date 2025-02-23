@@ -72,6 +72,7 @@ void OmniPidPursuitController::configure(
   declare_parameter_if_not_declared(
     node, plugin_name_ + ".lookahead_dist", rclcpp::ParameterValue(0.3));
   declare_parameter_if_not_declared(
+
     node, plugin_name_ + ".use_velocity_scaled_lookahead_dist", rclcpp::ParameterValue(true));
   declare_parameter_if_not_declared(
     node, plugin_name_ + ".min_lookahead_dist", rclcpp::ParameterValue(0.2));
@@ -100,6 +101,15 @@ void OmniPidPursuitController::configure(
   declare_parameter_if_not_declared(
     node, plugin_name_ + ".max_robot_pose_search_dist",
     rclcpp::ParameterValue(getCostmapMaxExtent()));
+  declare_parameter_if_not_declared(
+    node, plugin_name_ + ".curvature_threshold_low",
+    rclcpp::ParameterValue(0.1));  // New: Low curvature threshold parameter
+  declare_parameter_if_not_declared(
+    node, plugin_name_ + ".curvature_threshold_high",
+    rclcpp::ParameterValue(0.3));  // New: High curvature threshold parameter
+  declare_parameter_if_not_declared(
+    node, plugin_name_ + ".reduction_ratio_at_high_curvature",
+    rclcpp::ParameterValue(0.5));  // New: Speed reduction ratio at high curvature parameter
 
   node->get_parameter(plugin_name_ + ".translation_kp", translation_kp_);
   node->get_parameter(plugin_name_ + ".translation_ki", translation_ki_);
@@ -117,6 +127,7 @@ void OmniPidPursuitController::configure(
   node->get_parameter(plugin_name_ + ".max_lookahead_dist", max_lookahead_dist_);
   node->get_parameter(plugin_name_ + ".lookahead_time", lookahead_time_);
   node->get_parameter(plugin_name_ + ".use_interpolation", use_interpolation_);
+
   node->get_parameter(plugin_name_ + ".use_rotate_to_heading", use_rotate_to_heading_);
   node->get_parameter(
     plugin_name_ + ".use_rotate_to_heading_treshold", use_rotate_to_heading_treshold_);
@@ -135,6 +146,15 @@ void OmniPidPursuitController::configure(
   node->get_parameter(plugin_name_ + ".max_rotation_speed", max_rotation_speed_);
   node->get_parameter(plugin_name_ + ".min_rotation_speed", min_rotation_speed_);
   node->get_parameter(plugin_name_ + ".max_robot_pose_search_dist", max_robot_pose_search_dist_);
+  node->get_parameter(
+    plugin_name_ + ".curvature_threshold_low",
+    curvature_threshold_low_);  // Get low curvature threshold parameter
+  node->get_parameter(
+    plugin_name_ + ".curvature_threshold_high",
+    curvature_threshold_high_);  // Get high curvature threshold parameter
+  node->get_parameter(
+    plugin_name_ + ".reduction_ratio_at_high_curvature",
+    reduction_ratio_at_high_curvature_);  // Get speed reduction ratio at high curvature parameter
 
   node->get_parameter("controller_frequency", control_frequency);
 
@@ -167,6 +187,7 @@ void OmniPidPursuitController::activate()
 {
   RCLCPP_INFO(
     logger_,
+
     "Activating controller: %s of type "
     "regulated_pure_pursuit_controller::OmniPidPursuitController",
     plugin_name_.c_str());
@@ -179,6 +200,7 @@ void OmniPidPursuitController::activate()
 }
 
 void OmniPidPursuitController::deactivate()
+
 {
   RCLCPP_INFO(
     logger_,
@@ -222,7 +244,16 @@ geometry_msgs::msg::TwistStamped OmniPidPursuitController::computeVelocityComman
   auto lin_vel = move_pid_->calculate(lin_dist, 0);
   auto angular_vel = enable_rotation_ ? heading_pid_->calculate(angle_to_goal, 0) : 0.0;
 
-  applyApproachVelocityScaling(transformed_plan, lin_vel);
+  // New: Calculate curvature (three-point method)
+  double curvature = calculateThreePointCurvature(transformed_plan, carrot_pose);
+
+  // Modified: Apply curvature-based speed scaling
+  applyApproachVelocityScaling(transformed_plan, lin_vel, curvature);
+
+  // New: Output curvature speed scaling log (optional)
+  logCurvatureSpeedScalingInfo(
+    curvature, curvature_threshold_low_, curvature_threshold_high_, lin_vel,
+    reduction_ratio_at_high_curvature_);
 
   // Transform local frame to global frame to use in collision checking
   nav_msgs::msg::Path costmap_frame_local_plan;
@@ -352,6 +383,7 @@ geometry_msgs::msg::PoseStamped OmniPidPursuitController::getLookAheadPoint(
     // and goal_pose is guaranteed to be outside the circle.
     auto prev_pose_it = std::prev(goal_pose_it);
     auto point = circleSegmentIntersection(
+
       prev_pose_it->pose.position, goal_pose_it->pose.position, lookahead_dist);
     geometry_msgs::msg::PoseStamped pose;
     pose.header.frame_id = prev_pose_it->header.frame_id;
@@ -368,6 +400,7 @@ geometry_msgs::msg::Point OmniPidPursuitController::circleSegmentIntersection(
 {
   // Formula for intersection of a line with a circle centered at the origin,
   // modified to always return the point that is on the segment between the two points.
+
   // https://mathworld.wolfram.com/Circle-LineIntersection.html
   // This works because the poses are transformed into the robot frame.
   // This can be derived from solving the system of equations of a line and a circle
@@ -491,6 +524,16 @@ rcl_interfaces::msg::SetParametersResult OmniPidPursuitController::dynamicParame
         max_rotation_speed_ = parameter.as_double();
       } else if (name == plugin_name_ + ".min_rotation_speed") {
         min_rotation_speed_ = parameter.as_double();
+      } else if (
+        name == plugin_name_ + ".curvature_threshold_low") {  // New: Dynamic parameter callback
+        curvature_threshold_low_ = parameter.as_double();
+      } else if (
+        name == plugin_name_ + ".curvature_threshold_high") {  // New: Dynamic parameter callback
+        curvature_threshold_high_ = parameter.as_double();
+      } else if (
+        name ==
+        plugin_name_ + ".reduction_ratio_at_high_curvature") {  // New: Dynamic parameter callback
+        reduction_ratio_at_high_curvature_ = parameter.as_double();
       }
     } else if (type == ParameterType::PARAMETER_BOOL) {
       if (name == plugin_name_ + ".use_velocity_scaled_lookahead_dist") {
@@ -506,7 +549,7 @@ rcl_interfaces::msg::SetParametersResult OmniPidPursuitController::dynamicParame
   return result;
 }
 
-double OmniPidPursuitController::getLookAheadDistance(const geometry_msgs::msg::Twist & speed)
+double OmniPidPursuitController::getLookAheadDistance(const geometry_msgs::msg::Twist & speed) const
 {
   // If using velocity-scaled look ahead distances, find and clamp the dist
   // Else, use the static look ahead distance
@@ -537,20 +580,94 @@ double OmniPidPursuitController::approachVelocityScalingFactor(
   }
 }
 
+// New function: Calculate curvature using three-point method
+double OmniPidPursuitController::calculateThreePointCurvature(
+  const nav_msgs::msg::Path & path, const geometry_msgs::msg::PoseStamped & lookahead_pose) const
+{
+  if (path.poses.size() < 3) {
+    return 0.0;  // Not enough path points to calculate curvature, return 0
+  }
+
+  // Get nearest, middle, and lookahead poses
+  geometry_msgs::msg::PoseStamped pose_near =
+    path.poses[path.poses.size() - 2];                           // Second to last point (nearest)
+  geometry_msgs::msg::PoseStamped pose_mid = path.poses.back();  // Last point (middle)
+  geometry_msgs::msg::PoseStamped pose_far = lookahead_pose;     // Lookahead point (farthest)
+
+  // Calculate distances between the three points
+  double dist_near_mid = euclidean_distance(pose_near, pose_mid);
+  double dist_mid_far = euclidean_distance(pose_mid, pose_far);
+  double dist_far_near = euclidean_distance(pose_far, pose_near);
+
+  // Calculate the area of the triangle using Heron's formula
+  double s = (dist_near_mid + dist_mid_far + dist_far_near) / 2.0;
+  double area = std::sqrt(s * (s - dist_near_mid) * (s - dist_mid_far) * (s - dist_far_near));
+
+  // Calculate the radius of the circumcircle of the triangle
+  double radius = (dist_near_mid * dist_mid_far * dist_far_near) / (4.0 * area);
+
+  // Curvature = 1 / radius
+  if (radius > 0.0 && !std::isnan(radius)) {
+    return 1.0 / radius;
+  } else {
+    return 0.0;  // Radius is 0 or NaN, return curvature 0
+  }
+}
+
+// Modified applyApproachVelocityScaling function to accept curvature parameter (modified)
 void OmniPidPursuitController::applyApproachVelocityScaling(
-  const nav_msgs::msg::Path & path, double & linear_vel) const
+  const nav_msgs::msg::Path & path, double & linear_vel, double curvature) const
 {
   double approach_vel = linear_vel;
-  double velocity_scaling = approachVelocityScalingFactor(path);
-  double unbounded_vel = approach_vel * velocity_scaling;
+
+  // Apply curvature-based speed scaling
+  if (curvature > curvature_threshold_high_) {
+    // High curvature region: Reduce speed significantly
+    approach_vel *= (1.0 - reduction_ratio_at_high_curvature_);
+    RCLCPP_INFO_STREAM(
+      logger_, "High curvature detected, curvature: "
+                 << curvature
+                 << ", speed reduced to: " << approach_vel);  // Log high curvature speed reduction
+  } else if (curvature > curvature_threshold_low_) {
+    // Medium curvature region: Gradually reduce speed
+    approach_vel *=
+      (1.0 - (reduction_ratio_at_high_curvature_ * (curvature - curvature_threshold_low_) /
+              (curvature_threshold_high_ - curvature_threshold_low_)));
+    RCLCPP_INFO_STREAM(
+      logger_, "Medium curvature detected, curvature: "
+                 << curvature << ", speed reduced to: "
+                 << approach_vel);  // Log medium curvature speed reduction
+  } else {
+    // Low curvature region: No speed reduction
+    RCLCPP_INFO_STREAM(
+      logger_, "Low curvature detected, curvature: "
+                 << curvature << ", no speed reduction.");  // Log low curvature no speed reduction
+  }
+
+  double unbounded_vel =
+    approach_vel;  // * velocity_scaling; // No longer using distance-based speed scaling
   if (unbounded_vel < min_approach_linear_velocity_) {
     approach_vel = min_approach_linear_velocity_;
   } else {
-    approach_vel *= velocity_scaling;
+    approach_vel =
+      unbounded_vel;  // * velocity_scaling; // No longer using distance-based speed scaling
   }
 
   // Use the lowest velocity between approach and other constraints, if all overlapping
   linear_vel = std::min(linear_vel, approach_vel);
+}
+
+// New function: Output curvature speed scaling log (New, optional)
+void OmniPidPursuitController::logCurvatureSpeedScalingInfo(
+  double curvature, double curvature_threshold_low, double curvature_threshold_high,
+  double original_linear_vel, double reduction_ratio_at_high_curvature) const
+{
+  RCLCPP_DEBUG_STREAM(
+    logger_,
+    "Curvature: " << curvature << ", Low Threshold: " << curvature_threshold_low
+                  << ", High Threshold: " << curvature_threshold_high
+                  << ", Original Linear Vel: " << original_linear_vel
+                  << ", Reduction Ratio at High Curvature: " << reduction_ratio_at_high_curvature);
 }
 
 }  // namespace pb_omni_pid_pursuit_controller

@@ -140,13 +140,46 @@ protected:
   rcl_interfaces::msg::SetParametersResult dynamicParametersCallback(
     std::vector<rclcpp::Parameter> parameters);
 
-  double getLookAheadDistance(const geometry_msgs::msg::Twist & speed);
+  /**
+   * @brief Get look ahead distance based on current velocity.
+   * @param speed Current robot speed
+   * @return Look ahead distance
+   */
+  double getLookAheadDistance(const geometry_msgs::msg::Twist & speed) const;
 
   double approachVelocityScalingFactor(const nav_msgs::msg::Path & path) const;
 
-  void applyApproachVelocityScaling(const nav_msgs::msg::Path & path, double & linear_vel) const;
+  /**
+   * @brief Apply approach velocity scaling to linear velocity based on path curvature.
+   * @param path Transformed path
+   * @param linear_vel Linear velocity command (in-out parameter)
+   * @param curvature Path curvature at the lookahead point
+   */
+  void applyApproachVelocityScaling(
+    const nav_msgs::msg::Path & path, double & linear_vel, double curvature) const;
 
   bool isCollisionDetected(const nav_msgs::msg::Path & path);
+
+  /**
+   * @brief Calculate curvature using three-point method.
+   * @param path Transformed path
+   * @param lookahead_pose Lookahead pose on the path
+   * @return Path curvature at the lookahead point
+   */
+  double calculateThreePointCurvature(
+    const nav_msgs::msg::Path & path, const geometry_msgs::msg::PoseStamped & lookahead_pose) const;
+
+  /**
+   * @brief Output curvature speed scaling debug information. (Optional)
+   * @param curvature Path curvature
+   * @param curvature_threshold_low Low curvature threshold
+   * @param curvature_threshold_high High curvature threshold
+   * @param original_linear_vel Original linear velocity
+   * @param reduction_ratio_at_high_curvature Speed reduction ratio at high curvature
+   */
+  void logCurvatureSpeedScalingInfo(
+    double curvature, double curvature_threshold_low, double curvature_threshold_high,
+    double original_linear_vel, double reduction_ratio_at_high_curvature) const;
 
   rclcpp_lifecycle::LifecycleNode::WeakPtr node_;
   std::shared_ptr<tf2_ros::Buffer> tf_;
@@ -189,6 +222,11 @@ protected:
   // Dynamic parameters handler
   std::mutex mutex_;
   rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr dyn_params_handler_;
+
+  // New: Curvature-based speed scaling parameters
+  double curvature_threshold_low_;            // Low curvature threshold
+  double curvature_threshold_high_;           // High curvature threshold
+  double reduction_ratio_at_high_curvature_;  // Speed reduction ratio at high curvature
 };
 
 }  // namespace pb_omni_pid_pursuit_controller
