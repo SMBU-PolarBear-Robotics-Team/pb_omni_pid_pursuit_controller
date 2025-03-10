@@ -90,16 +90,28 @@ void OmniPidPursuitController::configure(
   declare_parameter_if_not_declared(
     node, plugin_name_ + ".approach_velocity_scaling_dist", rclcpp::ParameterValue(0.6));
   declare_parameter_if_not_declared(
-    node, plugin_name_ + ".min_translation_speed", rclcpp::ParameterValue(-3.0));
+    node, plugin_name_ + ".v_linear_min", rclcpp::ParameterValue(-3.0));
   declare_parameter_if_not_declared(
-    node, plugin_name_ + ".max_translation_speed", rclcpp::ParameterValue(3.0));
+    node, plugin_name_ + ".v_linear_max", rclcpp::ParameterValue(3.0));
   declare_parameter_if_not_declared(
-    node, plugin_name_ + ".min_rotation_speed", rclcpp::ParameterValue(-3.0));
+    node, plugin_name_ + ".v_angular_min", rclcpp::ParameterValue(-3.0));
   declare_parameter_if_not_declared(
-    node, plugin_name_ + ".max_rotation_speed", rclcpp::ParameterValue(3.0));
+    node, plugin_name_ + ".v_angular_max", rclcpp::ParameterValue(3.0));
   declare_parameter_if_not_declared(
     node, plugin_name_ + ".max_robot_pose_search_dist",
     rclcpp::ParameterValue(getCostmapMaxExtent()));
+  declare_parameter_if_not_declared(
+    node, plugin_name_ + ".curvature_min", rclcpp::ParameterValue(0.4));
+  declare_parameter_if_not_declared(
+    node, plugin_name_ + ".curvature_max", rclcpp::ParameterValue(0.7));
+  declare_parameter_if_not_declared(
+    node, plugin_name_ + ".reduction_ratio_at_high_curvature", rclcpp::ParameterValue(0.5));
+  declare_parameter_if_not_declared(
+    node, plugin_name_ + ".curvature_forward_dist", rclcpp::ParameterValue(0.7));
+  declare_parameter_if_not_declared(
+    node, plugin_name_ + ".curvature_backward_dist", rclcpp::ParameterValue(0.3));
+  declare_parameter_if_not_declared(
+    node, plugin_name_ + ".max_velocity_scaling_factor_rate", rclcpp::ParameterValue(0.9));
 
   node->get_parameter(plugin_name_ + ".translation_kp", translation_kp_);
   node->get_parameter(plugin_name_ + ".translation_ki", translation_ki_);
@@ -130,11 +142,19 @@ void OmniPidPursuitController::configure(
       "approach_velocity_scaling_dist is larger than forward costmap extent, "
       "leading to permanent slowdown");
   }
-  node->get_parameter(plugin_name_ + ".max_translation_speed", max_translation_speed_);
-  node->get_parameter(plugin_name_ + ".min_translation_speed", min_translation_speed_);
-  node->get_parameter(plugin_name_ + ".max_rotation_speed", max_rotation_speed_);
-  node->get_parameter(plugin_name_ + ".min_rotation_speed", min_rotation_speed_);
+  node->get_parameter(plugin_name_ + ".v_linear_max", v_linear_max_);
+  node->get_parameter(plugin_name_ + ".v_linear_min", v_linear_min_);
+  node->get_parameter(plugin_name_ + ".v_angular_max", v_angular_max_);
+  node->get_parameter(plugin_name_ + ".v_angular_min", v_angular_min_);
   node->get_parameter(plugin_name_ + ".max_robot_pose_search_dist", max_robot_pose_search_dist_);
+  node->get_parameter(plugin_name_ + ".curvature_min", curvature_min_);
+  node->get_parameter(plugin_name_ + ".curvature_max", curvature_max_);
+  node->get_parameter(
+    plugin_name_ + ".reduction_ratio_at_high_curvature", reduction_ratio_at_high_curvature_);
+  node->get_parameter(plugin_name_ + ".curvature_forward_dist", curvature_forward_dist_);
+  node->get_parameter(plugin_name_ + ".curvature_backward_dist", curvature_backward_dist_);
+  node->get_parameter(
+    plugin_name_ + ".max_velocity_scaling_factor_rate", max_velocity_scaling_factor_rate_);
 
   node->get_parameter("controller_frequency", control_frequency);
 
@@ -143,13 +163,16 @@ void OmniPidPursuitController::configure(
 
   local_path_pub_ = node->create_publisher<nav_msgs::msg::Path>("local_plan", 1);
   carrot_pub_ = node->create_publisher<geometry_msgs::msg::PointStamped>("lookahead_point", 1);
+  curvature_points_pub_ =
+    node_.lock()
+      ->create_publisher<visualization_msgs::msg::MarkerArray>(  // 初始化 MarkerArray Publisher
+        "curvature_points_marker_array", rclcpp::QoS(10));
 
   move_pid_ = std::make_shared<PID>(
-    control_duration_, max_translation_speed_, min_translation_speed_, translation_kp_,
-    translation_kd_, translation_ki_);
+    control_duration_, v_linear_max_, v_linear_min_, translation_kp_, translation_kd_,
+    translation_ki_);
   heading_pid_ = std::make_shared<PID>(
-    control_duration_, max_rotation_speed_, min_rotation_speed_, rotation_kp_, rotation_kd_,
-    rotation_ki_);
+    control_duration_, v_angular_max_, v_angular_min_, rotation_kp_, rotation_kd_, rotation_ki_);
 }
 
 void OmniPidPursuitController::cleanup()
@@ -161,6 +184,7 @@ void OmniPidPursuitController::cleanup()
     plugin_name_.c_str());
   local_path_pub_.reset();
   carrot_pub_.reset();
+  curvature_points_pub_.reset();
 }
 
 void OmniPidPursuitController::activate()
@@ -172,6 +196,7 @@ void OmniPidPursuitController::activate()
     plugin_name_.c_str());
   local_path_pub_->on_activate();
   carrot_pub_->on_activate();
+  curvature_points_pub_->on_activate();
   // Add callback for dynamic parameters
   auto node = node_.lock();
   dyn_params_handler_ = node->add_on_set_parameters_callback(
@@ -187,6 +212,7 @@ void OmniPidPursuitController::deactivate()
     plugin_name_.c_str());
   local_path_pub_->on_deactivate();
   carrot_pub_->on_deactivate();
+  curvature_points_pub_->on_deactivate();
   dyn_params_handler_.reset();
 }
 
@@ -221,6 +247,8 @@ geometry_msgs::msg::TwistStamped OmniPidPursuitController::computeVelocityComman
 
   auto lin_vel = move_pid_->calculate(lin_dist, 0);
   auto angular_vel = enable_rotation_ ? heading_pid_->calculate(angle_to_goal, 0) : 0.0;
+
+  applyCurvatureLimitation(transformed_plan, carrot_pose, lin_vel);
 
   applyApproachVelocityScaling(transformed_plan, lin_vel);
 
@@ -441,71 +469,6 @@ bool OmniPidPursuitController::isCollisionDetected(const nav_msgs::msg::Path & p
   return false;
 }
 
-rcl_interfaces::msg::SetParametersResult OmniPidPursuitController::dynamicParametersCallback(
-  std::vector<rclcpp::Parameter> parameters)
-{
-  rcl_interfaces::msg::SetParametersResult result;
-  std::lock_guard<std::mutex> lock_reinit(mutex_);
-
-  for (const auto & parameter : parameters) {
-    const auto & type = parameter.get_type();
-    const auto & name = parameter.get_name();
-
-    if (type == ParameterType::PARAMETER_DOUBLE) {
-      if (name == plugin_name_ + ".translation_kp") {
-        translation_kp_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".translation_ki") {
-        translation_ki_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".translation_kd") {
-        translation_kd_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".rotation_kp") {
-        rotation_kp_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".rotation_ki") {
-        rotation_ki_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".rotation_kd") {
-        rotation_kd_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".transform_tolerance") {
-        double transform_tolerance = parameter.as_double();
-        transform_tolerance_ = tf2::durationFromSec(transform_tolerance);
-      } else if (name == plugin_name_ + ".min_max_sum_error") {
-        min_max_sum_error_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".lookahead_dist") {
-        lookahead_dist_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".min_lookahead_dist") {
-        min_lookahead_dist_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".max_lookahead_dist") {
-        max_lookahead_dist_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".lookahead_time") {
-        lookahead_time_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".use_rotate_to_heading_treshold") {
-        use_rotate_to_heading_treshold_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".min_approach_linear_velocity") {
-        min_approach_linear_velocity_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".approach_velocity_scaling_dist") {
-        approach_velocity_scaling_dist_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".max_translation_speed") {
-        max_translation_speed_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".min_translation_speed") {
-        min_translation_speed_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".max_rotation_speed") {
-        max_rotation_speed_ = parameter.as_double();
-      } else if (name == plugin_name_ + ".min_rotation_speed") {
-        min_rotation_speed_ = parameter.as_double();
-      }
-    } else if (type == ParameterType::PARAMETER_BOOL) {
-      if (name == plugin_name_ + ".use_velocity_scaled_lookahead_dist") {
-        use_velocity_scaled_lookahead_dist_ = parameter.as_bool();
-      } else if (name == plugin_name_ + ".use_interpolation") {
-        use_interpolation_ = parameter.as_bool();
-      } else if (name == plugin_name_ + ".use_rotate_to_heading") {
-        use_rotate_to_heading_ = parameter.as_bool();
-      }
-    }
-  }
-  result.successful = true;
-  return result;
-}
-
 double OmniPidPursuitController::getLookAheadDistance(const geometry_msgs::msg::Twist & speed)
 {
   // If using velocity-scaled look ahead distances, find and clamp the dist
@@ -553,8 +516,249 @@ void OmniPidPursuitController::applyApproachVelocityScaling(
   linear_vel = std::min(linear_vel, approach_vel);
 }
 
-}  // namespace pb_omni_pid_pursuit_controller
+void OmniPidPursuitController::applyCurvatureLimitation(
+  const nav_msgs::msg::Path & path, const geometry_msgs::msg::PoseStamped & lookahead_pose,
+  double & linear_vel)
+{
+  double curvature =
+    calculateCurvature(path, lookahead_pose, curvature_forward_dist_, curvature_backward_dist_);
 
+  double scaled_linear_vel = linear_vel;
+  if (curvature > curvature_min_) {
+    double reduction_ratio = 1.0;
+    if (curvature > curvature_max_) {
+      reduction_ratio = reduction_ratio_at_high_curvature_;
+    } else {
+      reduction_ratio = 1.0 - (curvature - curvature_min_) / (curvature_max_ - curvature_min_) *
+                                (1.0 - reduction_ratio_at_high_curvature_);
+    }
+
+    double target_scaled_vel = linear_vel * reduction_ratio;
+    scaled_linear_vel =
+      last_velocity_scaling_factor_ + std::clamp(
+                                        target_scaled_vel - last_velocity_scaling_factor_,
+                                        -max_velocity_scaling_factor_rate_ * control_duration_,
+                                        max_velocity_scaling_factor_rate_ * control_duration_);
+  }
+  scaled_linear_vel = std::max(scaled_linear_vel, 2.0 * min_approach_linear_velocity_);
+
+  linear_vel = std::min(linear_vel, scaled_linear_vel);
+  last_velocity_scaling_factor_ = linear_vel;
+}
+
+double OmniPidPursuitController::calculateCurvature(
+  const nav_msgs::msg::Path & path, const geometry_msgs::msg::PoseStamped & lookahead_pose,
+  double forward_dist, double backward_dist) const
+{
+  geometry_msgs::msg::PoseStamped backward_pose, forward_pose;
+  std::vector<double> cumulative_distances = calculateCumulativeDistances(path);
+
+  double lookahead_pose_cumulative_distance = 0.0;
+  geometry_msgs::msg::PoseStamped robot_base_frame_pose;
+  robot_base_frame_pose.pose = geometry_msgs::msg::Pose();
+  lookahead_pose_cumulative_distance =
+    nav2_util::geometry_utils::euclidean_distance(robot_base_frame_pose, lookahead_pose);
+
+  backward_pose = findPoseAtDistance(
+    path, cumulative_distances, lookahead_pose_cumulative_distance - backward_dist);
+
+  forward_pose = findPoseAtDistance(
+    path, cumulative_distances, lookahead_pose_cumulative_distance + forward_dist);
+
+  double curvature_radius = calculateCurvatureRadius(
+    backward_pose.pose.position, lookahead_pose.pose.position, forward_pose.pose.position);
+  double curvature = 1.0 / curvature_radius;
+  visualizeCurvaturePoints(backward_pose, forward_pose);
+  return curvature;
+}
+
+double OmniPidPursuitController::calculateCurvatureRadius(
+  const geometry_msgs::msg::Point & near_point, const geometry_msgs::msg::Point & current_point,
+  const geometry_msgs::msg::Point & far_point) const
+{
+  double x1 = near_point.x, y1 = near_point.y;
+  double x2 = current_point.x, y2 = current_point.y;
+  double x3 = far_point.x, y3 = far_point.y;
+
+  double center_x = ((x1 * x1 + y1 * y1) * (y2 - y3) + (x2 * x2 + y2 * y2) * (y3 - y1) +
+                     (x3 * x3 + y3 * y3) * (y1 - y2)) /
+                    (2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)));
+  double center_y = ((x1 * x1 + y1 * y1) * (x3 - x2) + (x2 * x2 + y2 * y2) * (x1 - x3) +
+                     (x3 * x3 + y3 * y3) * (x2 - x1)) /
+                    (2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)));
+  double radius = std::hypot(x2 - center_x, y2 - center_y);
+  if (std::isnan(radius) || std::isinf(radius) || radius < 1e-9) {
+    return 1e9;
+  }
+  return radius;
+}
+
+void OmniPidPursuitController::visualizeCurvaturePoints(
+  const geometry_msgs::msg::PoseStamped & backward_pose,
+  const geometry_msgs::msg::PoseStamped & forward_pose) const
+{
+  visualization_msgs::msg::MarkerArray marker_array;
+
+  visualization_msgs::msg::Marker near_marker;
+  near_marker.header = backward_pose.header;
+  near_marker.ns = "curvature_points";
+  near_marker.id = 0;
+  near_marker.type = visualization_msgs::msg::Marker::SPHERE;
+  near_marker.action = visualization_msgs::msg::Marker::ADD;
+  near_marker.pose = backward_pose.pose;
+  near_marker.scale.x = near_marker.scale.y = near_marker.scale.z = 0.1;
+  near_marker.color.g = 1.0;
+  near_marker.color.a = 1.0;
+
+  visualization_msgs::msg::Marker far_marker;
+  far_marker.header = forward_pose.header;
+  far_marker.ns = "curvature_points";
+  far_marker.id = 1;
+  far_marker.type = visualization_msgs::msg::Marker::SPHERE;
+  far_marker.action = visualization_msgs::msg::Marker::ADD;
+  far_marker.pose = forward_pose.pose;
+  far_marker.scale.x = far_marker.scale.y = far_marker.scale.z = 0.1;
+  far_marker.color.r = 1.0;
+  far_marker.color.a = 1.0;
+
+  marker_array.markers.push_back(near_marker);
+  marker_array.markers.push_back(far_marker);
+
+  curvature_points_pub_->publish(marker_array);
+}
+
+std::vector<double> OmniPidPursuitController::calculateCumulativeDistances(
+  const nav_msgs::msg::Path & path) const
+{
+  std::vector<double> cumulative_distances;
+  cumulative_distances.push_back(0.0);
+
+  for (size_t i = 1; i < path.poses.size(); ++i) {
+    const auto & prev_pose = path.poses[i - 1].pose.position;
+    const auto & curr_pose = path.poses[i].pose.position;
+    double distance = hypot(curr_pose.x - prev_pose.x, curr_pose.y - prev_pose.y);
+    cumulative_distances.push_back(cumulative_distances.back() + distance);
+  }
+  return cumulative_distances;
+}
+
+geometry_msgs::msg::PoseStamped OmniPidPursuitController::findPoseAtDistance(
+  const nav_msgs::msg::Path & path, const std::vector<double> & cumulative_distances,
+  double target_distance) const
+{
+  if (path.poses.empty() || cumulative_distances.empty()) {
+    return geometry_msgs::msg::PoseStamped();
+  }
+  if (target_distance <= 0.0) {
+    return path.poses.front();
+  }
+  if (target_distance >= cumulative_distances.back()) {
+    return path.poses.back();
+  }
+  auto it =
+    std::lower_bound(cumulative_distances.begin(), cumulative_distances.end(), target_distance);
+  size_t index = std::distance(cumulative_distances.begin(), it);
+
+  if (index == 0) {
+    return path.poses.front();
+  }
+
+  double ratio = (target_distance - cumulative_distances[index - 1]) /
+                 (cumulative_distances[index] - cumulative_distances[index - 1]);
+  geometry_msgs::msg::PoseStamped pose1 = path.poses[index - 1];
+  geometry_msgs::msg::PoseStamped pose2 = path.poses[index];
+
+  geometry_msgs::msg::PoseStamped interpolated_pose;
+  interpolated_pose.header = pose2.header;
+  interpolated_pose.pose.position.x =
+    pose1.pose.position.x + ratio * (pose2.pose.position.x - pose1.pose.position.x);
+  interpolated_pose.pose.position.y =
+    pose1.pose.position.y + ratio * (pose2.pose.position.y - pose1.pose.position.y);
+  interpolated_pose.pose.position.z =
+    pose1.pose.position.z + ratio * (pose2.pose.position.z - pose1.pose.position.z);
+  interpolated_pose.pose.orientation = pose2.pose.orientation;
+
+  return interpolated_pose;
+}
+
+rcl_interfaces::msg::SetParametersResult OmniPidPursuitController::dynamicParametersCallback(
+  std::vector<rclcpp::Parameter> parameters)
+{
+  rcl_interfaces::msg::SetParametersResult result;
+  std::lock_guard<std::mutex> lock_reinit(mutex_);
+
+  for (const auto & parameter : parameters) {
+    const auto & type = parameter.get_type();
+    const auto & name = parameter.get_name();
+
+    if (type == ParameterType::PARAMETER_DOUBLE) {
+      if (name == plugin_name_ + ".translation_kp") {
+        translation_kp_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".translation_ki") {
+        translation_ki_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".translation_kd") {
+        translation_kd_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".rotation_kp") {
+        rotation_kp_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".rotation_ki") {
+        rotation_ki_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".rotation_kd") {
+        rotation_kd_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".transform_tolerance") {
+        double transform_tolerance = parameter.as_double();
+        transform_tolerance_ = tf2::durationFromSec(transform_tolerance);
+      } else if (name == plugin_name_ + ".min_max_sum_error") {
+        min_max_sum_error_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".lookahead_dist") {
+        lookahead_dist_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".min_lookahead_dist") {
+        min_lookahead_dist_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".max_lookahead_dist") {
+        max_lookahead_dist_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".lookahead_time") {
+        lookahead_time_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".use_rotate_to_heading_treshold") {
+        use_rotate_to_heading_treshold_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".min_approach_linear_velocity") {
+        min_approach_linear_velocity_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".approach_velocity_scaling_dist") {
+        approach_velocity_scaling_dist_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".v_linear_max") {
+        v_linear_max_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".v_linear_min") {
+        v_linear_min_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".v_angular_max") {
+        v_angular_max_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".v_angular_min") {
+        v_angular_min_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".curvature_min") {
+        curvature_min_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".curvature_max") {
+        curvature_max_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".reduction_ratio_at_high_curvature") {
+        reduction_ratio_at_high_curvature_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".curvature_forward_dist") {
+        curvature_forward_dist_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".curvature_backward_dist") {
+        curvature_backward_dist_ = parameter.as_double();
+      } else if (name == plugin_name_ + ".max_velocity_scaling_factor_rate") {
+        max_velocity_scaling_factor_rate_ = parameter.as_double();
+      }
+    } else if (type == ParameterType::PARAMETER_BOOL) {
+      if (name == plugin_name_ + ".use_velocity_scaled_lookahead_dist") {
+        use_velocity_scaled_lookahead_dist_ = parameter.as_bool();
+      } else if (name == plugin_name_ + ".use_interpolation") {
+        use_interpolation_ = parameter.as_bool();
+      } else if (name == plugin_name_ + ".use_rotate_to_heading") {
+        use_rotate_to_heading_ = parameter.as_bool();
+      }
+    }
+  }
+  result.successful = true;
+  return result;
+}
+
+};  // namespace pb_omni_pid_pursuit_controller
 // Register this controller as a nav2_core plugin
 #include "pluginlib/class_list_macros.hpp"
 PLUGINLIB_EXPORT_CLASS(

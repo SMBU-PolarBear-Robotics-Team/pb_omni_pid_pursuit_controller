@@ -26,10 +26,16 @@
 | `use_rotate_to_heading_treshold` | The angular threshold at which the robot should rotate in place to align with the desired heading. |
 | `min_approach_linear_velocity` | The minimum linear velocity when approaching the goal to ensure the robot moves slowly when close to its target. |
 | `approach_velocity_scaling_dist` | The distance from the goal where velocity scaling starts when approaching, slowing the robot down as it nears the target. |
-| `min_translation_speed` | The minimum translation speed the robot can command, allowing for reverse or slow-forward movement. |
-| `max_translation_speed` | The maximum translation speed the robot can command, setting the upper limit for forward movement. |
-| `min_rotation_speed` | The minimum rotation speed the robot can command, allowing for counter-clockwise rotation. |
-| `max_rotation_speed` | The maximum rotation speed the robot can command, setting the upper limit for clockwise rotation. |
+| `v_linear_min` | The minimum translation speed the robot can command, allowing for reverse or slow-forward movement. |
+| `v_linear_max` | The maximum translation speed the robot can command, setting the upper limit for forward movement. |
+| `v_angular_min` | The minimum rotation speed the robot can command, allowing for counter-clockwise rotation. |
+| `v_angular_max` | The maximum rotation speed the robot can command, setting the upper limit for clockwise rotation. |
+| `curvature_min` | The minimum curvature threshold below which no speed reduction is applied. |
+| `curvature_max` | The maximum curvature threshold above which significant speed reduction is applied. |
+| `reduction_ratio_at_high_curvature` | The speed reduction ratio at high curvature. 0.5 means a 50% reduction. |
+| `curvature_forward_dist` | The forward distance used for curvature calculation. |
+| `curvature_backward_dist` | The backward distance used for curvature calculation. |
+| `max_velocity_scaling_factor_rate` | The maximum rate of change for the velocity scaling factor. |
 | `max_robot_pose_search_dist` | The maximum distance along the path to search for the robot's closest pose, used to keep the robot on the planned path. |
 
 Example fully-described XML with default parameter values:
@@ -61,7 +67,7 @@ controller_server:
       translation_kp: 3.0
       translation_ki: 0.1
       translation_kd: 0.3
-      enable_rotation: false
+      enable_rotation: true
       rotation_kp: 3.0
       rotation_ki: 0.1
       rotation_kd: 0.3
@@ -76,13 +82,15 @@ controller_server:
       use_rotate_to_heading: false
       use_rotate_to_heading_treshold: 0.1
       min_approach_linear_velocity: 0.5
-      approach_velocity_scaling_dist: 1.5
-      min_translation_speed: -2.5
-      max_translation_speed: 2.5
-      min_rotation_speed: -3.0
-      max_rotation_speed: 3.0
+      approach_velocity_scaling_dist: 1.0
+      v_linear_min: -2.5
+      v_linear_max: 2.5
+      v_angular_min: -3.0
+      v_angular_max: 3.0
+      curvature_min: 0.4
+      curvature_max: 0.7
+      reduction_ratio_at_high_curvature: 0.5
+      curvature_forward_dist: 0.7
+      curvature_backward_dist: 0.3
+      max_velocity_scaling_factor_rate: 0.9
 ```
-
-## TODO
-
-- [ ] Adjust speed based on curvature
