@@ -9,10 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: rostooling/setup-ros-docker:ubuntu-jammy-ros-jazzy-desktop-latest
+      image: ghcr.io/ros-tooling/setup-ros-docker/setup-ros-docker-ubuntu-noble-ros-jazzy-ros-base
     steps:
       - name: Build pb_omni_pid_pursuit_controller
-        uses: ros-tooling/action-ros-ci@v0.3
+        uses: ros-tooling/action-ros-ci@v0.4
         with:
           package-name: pb_omni_pid_pursuit_controller
           target-ros2-distro: jazzy
