@@ -11,7 +11,7 @@ jobs:
     container:
       image: rostooling/setup-ros-docker:ubuntu-jammy-ros-humble-desktop-latest
     steps:
-      - name: Build small_gicp_relocalization
+      - name: Build pb_omni_pid_pursuit_controller
         uses: ros-tooling/action-ros-ci@v0.3
         with:
           package-name: pb_omni_pid_pursuit_controller
