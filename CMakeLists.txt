@@ -26,4 +26,4 @@ endif()
 
 pluginlib_export_plugin_description_file(nav2_core pb_omni_pid_pursuit_controller.xml)
 
-ament_auto_package()
+ament_auto_package(USE_SCOPED_HEADER_INSTALL_DIR)
