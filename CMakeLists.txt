@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(pb_omni_pid_pursuit_controller)
 
+## Export compile commands for clangd and clang-tidy
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
