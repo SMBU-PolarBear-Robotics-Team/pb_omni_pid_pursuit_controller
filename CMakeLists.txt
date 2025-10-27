@@ -10,9 +10,13 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
 )
 
 if(BUILD_TESTING)
+  set(ament_cmake_clang_format_CONFIG_FILE "${CMAKE_SOURCE_DIR}/.clang-format")
+  set(ament_cmake_clang_tidy_CONFIG_FILE "${CMAKE_SOURCE_DIR}/.clang-tidy")
   find_package(ament_lint_auto REQUIRED)
   list(APPEND AMENT_LINT_AUTO_EXCLUDE
     ament_cmake_uncrustify
+    ament_cmake_cppcheck
+    ament_cmake_cpplint
   )
   ament_lint_auto_find_test_dependencies()
 endif()
