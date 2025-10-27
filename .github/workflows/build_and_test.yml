@@ -6,12 +6,12 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
     container:
       image: rostooling/setup-ros-docker:ubuntu-noble-ros-jazzy-ros-base-latest
     steps:
-      - name: Build pb_omni_pid_pursuit_controller
+      - name: Build and run tests
         uses: ros-tooling/action-ros-ci@v0.4
         with:
           package-name: pb_omni_pid_pursuit_controller
