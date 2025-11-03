@@ -16,14 +16,11 @@ if(BUILD_TESTING)
   set(ament_cmake_clang_format_CONFIG_FILE "${CMAKE_SOURCE_DIR}/.clang-format")
   set(ament_cmake_clang_tidy_CONFIG_FILE "${CMAKE_SOURCE_DIR}/.clang-tidy")
   find_package(ament_lint_auto REQUIRED)
-  list(APPEND AMENT_LINT_AUTO_EXCLUDE
-    ament_cmake_uncrustify
-    ament_cmake_cppcheck
-    ament_cmake_cpplint
-  )
-  ament_lint_auto_find_test_dependencies()
+    ament_lint_auto_find_test_dependencies()
 endif()
 
 pluginlib_export_plugin_description_file(nav2_core pb_omni_pid_pursuit_controller.xml)
 
-ament_auto_package(USE_SCOPED_HEADER_INSTALL_DIR)
+ament_auto_package(
+  USE_SCOPED_HEADER_INSTALL_DIR
+)
