@@ -41,11 +41,7 @@ repos:
       - id: codespell
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-<<<<<<< HEAD
-    rev: v0.14.3
-=======
     rev: v0.14.5
->>>>>>> 6550a2a ([pre-commit.ci] pre-commit autoupdate (#21))
     hooks:
       - id: ruff
         args: [--fix]
